@@ -5,7 +5,7 @@
 #include <string>
 #include <assert.h>
 
-namespace pcp {
+namespace img {
 
 //!
 //! \brief The Image class represents a 2D RGBA single floating point image.
@@ -147,4 +147,4 @@ int Image::index(int i, int j) const
     return 4 * (i * width() + j);
 }
 
-} // namespace pcp
+} // namespace img

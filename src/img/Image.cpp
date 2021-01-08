@@ -1,14 +1,14 @@
-#include "Image.h"
+#include <img/Image.h>
 
 #include <fstream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
-#include "stb_image.h"
+#include <img/stb/stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include <img/stb/stb_image_write.h>
 
-namespace pcp {
+namespace img {
 
 // Image -----------------------------------------------------------------------
 
@@ -201,4 +201,4 @@ void Image::fill(float gray, float a)
     this->fill(gray, gray, gray, a);
 }
 
-} // namespace pcp
+} // namespace img
