@@ -10,3 +10,16 @@ The [Image](https://github.com/ThibaultLejemble/img/blob/main/src/img/Image.h) c
 - the storage is in row-major order
 - pixel access is made through an `Eigen::Map` of `Eigen::Vector4f`
 - resizing operations are not conservative
+
+## Examples
+
+To download, compile, and run the [examples](https://github.com/ThibaultLejemble/img/tree/main/examples) run  
+```
+git clone --recurse-submodules git@github.com:ThibaultLejemble/img.git
+cd svg
+mkdir build
+cd build
+cmake .. 
+make -j
+./example1_fractal
+``` 
