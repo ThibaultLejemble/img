@@ -16,7 +16,7 @@ The [Image](https://github.com/ThibaultLejemble/img/blob/main/src/img/Image.h) c
 To download, compile, and run the [examples](https://github.com/ThibaultLejemble/img/tree/main/examples) run  
 ```
 git clone --recurse-submodules git@github.com:ThibaultLejemble/img.git
-cd svg
+cd img
 mkdir build
 cd build
 cmake .. 
