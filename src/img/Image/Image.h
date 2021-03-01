@@ -36,14 +36,6 @@ public:
 
     ~Image();
 
-    // IO ----------------------------------------------------------------------
-public:
-    bool load(const std::string& filename, bool flip = false);
-    bool save(const std::string& filename, bool flip = false) const;
-
-    bool load_bin(const std::string& filename);
-    bool save_bin(const std::string& filename) const;
-
     // Capacity ----------------------------------------------------------------
 public:
     inline bool empty();

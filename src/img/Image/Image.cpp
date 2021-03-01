@@ -2,14 +2,6 @@
 #include <img/Image/BinaryImage.h>
 #include <img/Image/GrayScaleImage.h>
 
-#include <fstream>
-
-#define STB_IMAGE_IMPLEMENTATION
-#define STBI_ONLY_PNG
-#include <img/Image/stb/stb_image.h>
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <img/Image/stb/stb_image_write.h>
-
 namespace img {
 
 // Image -----------------------------------------------------------------------
@@ -64,69 +56,6 @@ Image& Image::operator = (Image&& other)
 Image::~Image()
 {
     this->clear();
-}
-
-// IO --------------------------------------------------------------------------
-
-bool Image::load(const std::string& filename, bool flip)
-{
-    this->clear();
-
-    int channel = 0;
-    stbi_set_flip_vertically_on_load(flip);
-    unsigned char* data = stbi_load(filename.c_str(), &m_width, &m_height, &channel, 4);
-
-    if(data == nullptr) return false;
-
-    resize(m_height, m_width);
-
-    for(int k=0; k<capacity(); ++k)
-        m_data[k] = float(data[k]) / 255;
-
-    free(data);
-
-    return true;
-}
-
-bool Image::save(const std::string& filename, bool flip) const
-{
-    char* data = (char*)malloc(capacity()*sizeof(char));
-    for(int k=0; k<capacity(); ++k)
-        data[k] = 255*m_data[k];
-
-    stbi_flip_vertically_on_write(flip);
-    int ok = stbi_write_png(filename.c_str(), m_width, m_height, 4, data, 0);
-
-    free(data);
-
-    return ok;
-}
-
-bool Image::load_bin(const std::string& filename)
-{
-    std::ifstream ifs(filename);
-    if(!ifs.is_open()) return false;
-
-    ifs.read(reinterpret_cast<char*>(&m_height), sizeof(int));
-    ifs.read(reinterpret_cast<char*>(&m_width),  sizeof(int));
-
-    resize(m_height, m_width);
-
-    ifs.read(reinterpret_cast<char*>(m_data), 4 * m_height * m_width * sizeof(float));
-
-    return true;
-}
-
-bool Image::save_bin(const std::string& filename) const
-{
-    std::ofstream ofs(filename);
-    if(!ofs.is_open()) return false;
-
-    ofs.write(reinterpret_cast<const char*>(&m_height), sizeof(int));
-    ofs.write(reinterpret_cast<const char*>(&m_width), sizeof(int));
-    ofs.write(reinterpret_cast<const char*>(m_data), 4 * m_height * m_width * sizeof(float));
-
-    return true;
 }
 
 // Accessors -------------------------------------------------------------------

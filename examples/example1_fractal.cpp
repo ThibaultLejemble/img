@@ -1,4 +1,5 @@
 #include <img/Image/Image.h>
+#include <img/IO/Image_save.h>
 
 using namespace img;
 
@@ -39,6 +40,6 @@ int main()
     }
 
     // save image
-    const bool ok = image.save("example1_fractal.png");
+    const bool ok = save("example1_fractal.png", image);
     return !ok;
 }

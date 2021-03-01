@@ -1,6 +1,7 @@
 #include <img/Image/Image.h>
 #include <img/Image/BinaryImage.h>
 #include <img/Operations/Convert.h>
+#include <img/IO/ImageIO.h>
 
 #include <iostream>
 
@@ -9,7 +10,7 @@ using namespace img;
 int main()
 {
     Image rgb;
-    bool ok = rgb.load("example1_fractal.png");
+    bool ok = load("example1_fractal.png", rgb);
     if(!ok)
     {
         std::cout << "Failed to load image 'example1_fractal.png'" << std::endl;
@@ -24,6 +25,6 @@ int main()
     // binary to RGB (black and white)
     convert(binary, rgb);
 
-    ok = rgb.save("example2_binary.png");
+    ok = save("example2_binary.png", rgb);
     return !ok;
 }
