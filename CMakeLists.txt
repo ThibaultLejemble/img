@@ -15,3 +15,4 @@ set(SOURCES ${FILE_H} ${FILE_CPP})
 include_directories(src external/Eigen/)
 
 add_executable(example1_fractal examples/example1_fractal.cpp ${SOURCES})
+add_executable(example2_binary  examples/example2_binary.cpp  ${SOURCES})
