@@ -1,5 +1,5 @@
-#include <img/Image.h>
-#include <img/BinaryImage.h>
+#include <img/Image/Image.h>
+#include <img/Image/BinaryImage.h>
 
 #include <iostream>
 
