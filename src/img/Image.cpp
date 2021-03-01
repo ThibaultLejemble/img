@@ -1,4 +1,5 @@
 #include <img/Image.h>
+#include <img/BinaryImage.h>
 
 #include <fstream>
 
@@ -56,6 +57,27 @@ Image& Image::operator = (Image&& other)
     other.m_height = 0;
     other.m_width  = 0;
     other.m_data   = nullptr;
+    return *this;
+}
+
+Image::Image(const BinaryImage& other) : Image()
+{
+    this->resize(other.height(), other.width());
+
+    for(int k=0; k<capacity(); ++k)
+    {
+        this->operator()(k) = other(k) ? Color(1,1,1,1) : Color(0,0,0,1);
+    }
+}
+
+Image& Image::operator = (const BinaryImage& other)
+{
+    this->resize(other.height(), other.width());
+
+    for(int k=0; k<size(); ++k)
+    {
+        this->operator()(k) = other(k) ? Color(1,1,1,1) : Color(0,0,0,1);
+    }
     return *this;
 }
 

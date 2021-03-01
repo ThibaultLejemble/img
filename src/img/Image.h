@@ -7,6 +7,8 @@
 
 namespace img {
 
+class BinaryImage;
+
 //!
 //! \brief The Image class represents a 2D RGBA single floating point image.
 //!
@@ -34,6 +36,9 @@ public:
     Image& operator = (const Image& other);
     Image& operator = (Image&& other);
 
+    Image(const BinaryImage& other);
+    Image& operator = (const BinaryImage& other);
+
     ~Image();
 
     // IO ----------------------------------------------------------------------
@@ -56,6 +61,8 @@ public:
 public:
     inline ConstColorAccess operator() (int i, int j) const;
     inline ColorAccess      operator() (int i, int j);
+    inline ConstColorAccess operator() (int k) const;
+    inline ColorAccess      operator() (int k);
 
     const float* data() const;
           float* data();
@@ -74,6 +81,9 @@ public:
 protected:
     inline const float* at(int i, int j) const;
     inline       float* at(int i, int j);
+
+    inline const float* at(int k) const;
+    inline       float* at(int k);
 
     inline int index(int i, int j) const;
 
@@ -128,6 +138,16 @@ Image::ColorAccess Image::operator()(int i, int j)
     return ColorAccess(at(i,j));
 }
 
+Image::ConstColorAccess Image::operator()(int k) const
+{
+    return ConstColorAccess(at(k));
+}
+
+Image::ColorAccess Image::operator()(int k)
+{
+    return ColorAccess(at(k));
+}
+
 // Internal --------------------------------------------------------------------
 
 const float* Image::at(int i, int j) const
@@ -140,6 +160,18 @@ float* Image::at(int i, int j)
 {
     assert(0 <= i && i < height() && 0 <= j && j <= width());
     return &m_data[index(i,j)];
+}
+
+const float* Image::at(int k) const
+{
+    assert(0 <= k && k < height() * width());
+    return &m_data[4 * k];
+}
+
+float* Image::at(int k)
+{
+    assert(0 <= k && k < height() * width());
+    return &m_data[4 * k];
 }
 
 int Image::index(int i, int j) const
