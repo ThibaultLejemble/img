@@ -7,6 +7,7 @@
 namespace img {
 
 class Image;
+class GrayScaleImage;
 
 //!
 //! \brief The BinaryImage class represents a 2D binary image.
@@ -41,6 +42,9 @@ public:
 
     BinaryImage(const Image& other);
     BinaryImage& operator = (const Image& other);
+
+    BinaryImage(const GrayScaleImage& other);
+    BinaryImage& operator = (const GrayScaleImage& other);
 
     ~BinaryImage();
 

@@ -8,42 +8,41 @@
 namespace img {
 
 class BinaryImage;
-class GrayScaleImage;
+class Image;
 
 //!
-//! \brief The Image class represents a 2D RGBA single floating point image.
+//! \brief The Image class represents a 2D gray-scale single floating point image.
 //!
 //! Image can be loaded from and saved to png files.
 //! The top-left pixel is at coordinate (0,0).
 //! The storage is in row-major order.
-//! Pixel access is made through an Eigen::Map of Eigen::Vector4f.
 //! Resizing operations are not conservative.
 //!
-class Image
+class GrayScaleImage
 {
     // Types -------------------------------------------------------------------
 public:
-    using Color            = Eigen::Vector4f;
-    using ColorAccess      = Eigen::Map<Color>;
-    using ConstColorAccess = Eigen::Map<const Color>;
+    using Color            = float;
+    using ColorAccess      = Color&;
+    using ConstColorAccess = Color;
 
-    // Image -------------------------------------------------------------------
+    // GrayScale ---------------------------------------------------------------
 public:
-    Image();
-    Image(int height, int width);
-    Image(const Image& other);
-    Image(Image&& other);
+    GrayScaleImage();
+    GrayScaleImage(int height, int width);
+    GrayScaleImage(const GrayScaleImage& other);
+    GrayScaleImage(GrayScaleImage&& other);
 
-    Image& operator = (const Image& other);
-    Image& operator = (Image&& other);
+    GrayScaleImage& operator = (const GrayScaleImage& other);
+    GrayScaleImage& operator = (GrayScaleImage&& other);
 
-    Image(const BinaryImage& other);
-    Image& operator = (const BinaryImage& other);
+    GrayScaleImage(const Image& other);
+    GrayScaleImage& operator = (const Image& other);
 
-    Image(const GrayScaleImage& other);
-    Image& operator = (const GrayScaleImage& other);
+    GrayScaleImage(const BinaryImage& other);
+    GrayScaleImage& operator = (const BinaryImage& other);
 
-    ~Image();
+    ~GrayScaleImage();
 
     // IO ----------------------------------------------------------------------
 public:
@@ -77,9 +76,7 @@ public:
 public:
     void clear();
     void resize(int height, int width);
-    void set_alpha(float alpha);
-    void fill(float r, float g, float b, float a = 1.f);
-    void fill(float gray, float a = 1.f);
+    void fill(float value);
 
     // Internal ----------------------------------------------------------------
 protected:
@@ -97,7 +94,7 @@ protected:
     int     m_width;
     float*  m_data;
 
-}; // class Image
+}; // class GrayScale
 
 // =============================================================================
 // =============================================================================
@@ -105,82 +102,82 @@ protected:
 
 // Capacity --------------------------------------------------------------------
 
-bool Image::empty()
+bool GrayScaleImage::empty()
 {
     return size() == 0;
 }
 
-int Image::height() const
+int GrayScaleImage::height() const
 {
     return m_height;
 }
 
-int Image::width() const
+int GrayScaleImage::width() const
 {
     return m_width;
 }
 
-int Image::size() const
+int GrayScaleImage::size() const
 {
     return width() * height();
 }
 
-int Image::capacity() const
+int GrayScaleImage::capacity() const
 {
-    return 4 * size();
+    return 1 * size();
 }
 
 // Accessors -------------------------------------------------------------------
 
-Image::ConstColorAccess Image::operator()(int i, int j) const
+GrayScaleImage::ConstColorAccess GrayScaleImage::operator()(int i, int j) const
 {
-    return ConstColorAccess(at(i,j));
+    return *(at(i,j));
 }
 
-Image::ColorAccess Image::operator()(int i, int j)
+GrayScaleImage::ColorAccess GrayScaleImage::operator()(int i, int j)
 {
-    return ColorAccess(at(i,j));
+    return *(at(i,j));
 }
 
-Image::ConstColorAccess Image::operator()(int k) const
+GrayScaleImage::ConstColorAccess GrayScaleImage::operator()(int k) const
 {
-    return ConstColorAccess(at(k));
+    return *(at(k));
 }
 
-Image::ColorAccess Image::operator()(int k)
+GrayScaleImage::ColorAccess GrayScaleImage::operator()(int k)
 {
-    return ColorAccess(at(k));
+    return *(at(k));
 }
 
 // Internal --------------------------------------------------------------------
 
-const float* Image::at(int i, int j) const
+const float* GrayScaleImage::at(int i, int j) const
 {
     assert(0 <= i && i < height() && 0 <= j && j <= width());
     return &m_data[index(i,j)];
 }
 
-float* Image::at(int i, int j)
+float* GrayScaleImage::at(int i, int j)
 {
     assert(0 <= i && i < height() && 0 <= j && j <= width());
     return &m_data[index(i,j)];
 }
 
-const float* Image::at(int k) const
+const float* GrayScaleImage::at(int k) const
 {
     assert(0 <= k && k < height() * width());
-    return &m_data[4 * k];
+    return &m_data[1 * k];
 }
 
-float* Image::at(int k)
+float* GrayScaleImage::at(int k)
 {
     assert(0 <= k && k < height() * width());
-    return &m_data[4 * k];
+    return &m_data[1 * k];
 }
 
-int Image::index(int i, int j) const
+int GrayScaleImage::index(int i, int j) const
 {
-    return 4 * (i * width() + j);
+    return 1 * (i * width() + j);
 }
 
 } // namespace img

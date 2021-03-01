@@ -1,5 +1,6 @@
 #include <img/BinaryImage.h>
 #include <img/Image.h>
+#include <img/GrayScaleImage.h>
 
 namespace img {
 
@@ -68,6 +69,29 @@ BinaryImage& BinaryImage::operator = (const Image& other)
     for(int k=0; k<int(m_data.size()); ++k)
     {
         m_data[k] = (other(k).head<3>().sum() / 3 > 0.5);
+    }
+    return *this;
+}
+
+BinaryImage::BinaryImage(const GrayScaleImage& other) :
+    m_height(other.height()),
+    m_width(other.width()),
+    m_data(other.height() * other.width())
+{
+    for(int k=0; k<capacity(); ++k)
+    {
+        m_data[k] = (other(k) > 0.5);
+    }
+}
+
+BinaryImage& BinaryImage::operator = (const GrayScaleImage& other)
+{
+    m_height = other.height();
+    m_width  = other.width();
+    m_data.resize(m_height * m_width);
+    for(int k=0; k<int(m_data.size()); ++k)
+    {
+        m_data[k] = (other(k) > 0.5);
     }
     return *this;
 }
