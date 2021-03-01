@@ -61,48 +61,6 @@ GrayScaleImage& GrayScaleImage::operator = (GrayScaleImage&& other)
     return *this;
 }
 
-GrayScaleImage::GrayScaleImage(const Image& other) : GrayScaleImage()
-{
-    this->resize(other.height(), other.width());
-
-    for(int k=0; k<capacity(); ++k)
-    {
-        this->operator()(k) = other(k).head<3>().sum()/3;
-    }
-}
-
-GrayScaleImage& GrayScaleImage::operator = (const Image& other)
-{
-    this->resize(other.height(), other.width());
-
-    for(int k=0; k<size(); ++k)
-    {
-        this->operator()(k) = other(k).head<3>().sum()/3;
-    }
-    return *this;
-}
-
-GrayScaleImage::GrayScaleImage(const BinaryImage& other) : GrayScaleImage()
-{
-    this->resize(other.height(), other.width());
-
-    for(int k=0; k<capacity(); ++k)
-    {
-        this->operator()(k) = other(k) ? 1 : 0;
-    }
-}
-
-GrayScaleImage& GrayScaleImage::operator = (const BinaryImage& other)
-{
-    this->resize(other.height(), other.width());
-
-    for(int k=0; k<size(); ++k)
-    {
-        this->operator()(k) = other(k) ? 1 : 0;
-    }
-    return *this;
-}
-
 GrayScaleImage::~GrayScaleImage()
 {
     this->clear();

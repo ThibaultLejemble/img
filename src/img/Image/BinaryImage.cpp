@@ -50,76 +50,9 @@ BinaryImage& BinaryImage::operator = (BinaryImage&& other)
     return *this;
 }
 
-BinaryImage::BinaryImage(const Image& other) :
-    m_height(other.height()),
-    m_width(other.width()),
-    m_data(other.height() * other.width())
-{
-    for(int k=0; k<capacity(); ++k)
-    {
-        m_data[k] = (other(k).head<3>().sum() / 3 > 0.5);
-    }
-}
-
-BinaryImage& BinaryImage::operator = (const Image& other)
-{
-    m_height = other.height();
-    m_width  = other.width();
-    m_data.resize(m_height * m_width);
-    for(int k=0; k<int(m_data.size()); ++k)
-    {
-        m_data[k] = (other(k).head<3>().sum() / 3 > 0.5);
-    }
-    return *this;
-}
-
-BinaryImage::BinaryImage(const GrayScaleImage& other) :
-    m_height(other.height()),
-    m_width(other.width()),
-    m_data(other.height() * other.width())
-{
-    for(int k=0; k<capacity(); ++k)
-    {
-        m_data[k] = (other(k) > 0.5);
-    }
-}
-
-BinaryImage& BinaryImage::operator = (const GrayScaleImage& other)
-{
-    m_height = other.height();
-    m_width  = other.width();
-    m_data.resize(m_height * m_width);
-    for(int k=0; k<int(m_data.size()); ++k)
-    {
-        m_data[k] = (other(k) > 0.5);
-    }
-    return *this;
-}
-
 BinaryImage::~BinaryImage()
 {
     this->clear();
-}
-
-// IO --------------------------------------------------------------------------
-
-bool BinaryImage::load(const std::string& filename, bool flip)
-{
-    clear();
-
-    Image rgb;
-    const bool ok = rgb.load(filename, flip);
-    if(!ok) return false;
-
-    *this = rgb;
-
-    return true;
-}
-
-bool BinaryImage::save(const std::string& filename, bool flip) const
-{
-    Image rgb = *this;
-    return rgb.save(filename, flip);
 }
 
 // Modifiers -------------------------------------------------------------------

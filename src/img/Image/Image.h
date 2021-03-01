@@ -7,9 +7,6 @@
 
 namespace img {
 
-class BinaryImage;
-class GrayScaleImage;
-
 //!
 //! \brief The Image class represents a 2D RGBA single floating point image.
 //!
@@ -36,12 +33,6 @@ public:
 
     Image& operator = (const Image& other);
     Image& operator = (Image&& other);
-
-    Image(const BinaryImage& other);
-    Image& operator = (const BinaryImage& other);
-
-    Image(const GrayScaleImage& other);
-    Image& operator = (const GrayScaleImage& other);
 
     ~Image();
 

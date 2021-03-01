@@ -61,48 +61,6 @@ Image& Image::operator = (Image&& other)
     return *this;
 }
 
-Image::Image(const BinaryImage& other) : Image()
-{
-    this->resize(other.height(), other.width());
-
-    for(int k=0; k<capacity(); ++k)
-    {
-        this->operator()(k) = other(k) ? Color(1,1,1,1) : Color(0,0,0,1);
-    }
-}
-
-Image& Image::operator = (const BinaryImage& other)
-{
-    this->resize(other.height(), other.width());
-
-    for(int k=0; k<size(); ++k)
-    {
-        this->operator()(k) = other(k) ? Color(1,1,1,1) : Color(0,0,0,1);
-    }
-    return *this;
-}
-
-Image::Image(const GrayScaleImage& other) : Image()
-{
-    this->resize(other.height(), other.width());
-
-    for(int k=0; k<capacity(); ++k)
-    {
-        this->operator()(k) = Color(other(k),other(k),other(k),1);
-    }
-}
-
-Image& Image::operator = (const GrayScaleImage& other)
-{
-    this->resize(other.height(), other.width());
-
-    for(int k=0; k<size(); ++k)
-    {
-        this->operator()(k) = Color(other(k),other(k),other(k),1);
-    }
-    return *this;
-}
-
 Image::~Image()
 {
     this->clear();

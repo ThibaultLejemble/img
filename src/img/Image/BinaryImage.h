@@ -6,9 +6,6 @@
 
 namespace img {
 
-class Image;
-class GrayScaleImage;
-
 //!
 //! \brief The BinaryImage class represents a 2D binary image.
 //!
@@ -40,18 +37,7 @@ public:
     BinaryImage& operator = (const BinaryImage& other);
     BinaryImage& operator = (BinaryImage&& other);
 
-    BinaryImage(const Image& other);
-    BinaryImage& operator = (const Image& other);
-
-    BinaryImage(const GrayScaleImage& other);
-    BinaryImage& operator = (const GrayScaleImage& other);
-
     ~BinaryImage();
-
-    // IO ----------------------------------------------------------------------
-public:
-    bool load(const std::string& filename, bool flip = false);
-    bool save(const std::string& filename, bool flip = false) const;
 
     // Capacity ----------------------------------------------------------------
 public:
