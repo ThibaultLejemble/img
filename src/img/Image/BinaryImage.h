@@ -1,7 +1,6 @@
 #pragma once
 
-#include <Eigen/Core>
-
+#include <vector>
 #include <assert.h>
 
 namespace img {
@@ -133,7 +132,7 @@ BinaryImage::ColorAccess BinaryImage::operator()(int k)
 
 int BinaryImage::index(int i, int j) const
 {
-    return 4 * (i * width() + j);
+    return (i * width() + j);
 }
 
 } // namespace img

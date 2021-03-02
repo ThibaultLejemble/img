@@ -1,6 +1,6 @@
 #include <img/Image/GrayScaleImage.h>
-#include <img/Image/Image.h>
-#include <img/Image/BinaryImage.h>
+
+#include <cmath>
 
 namespace img {
 
