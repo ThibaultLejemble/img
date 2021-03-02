@@ -26,5 +26,6 @@ int main()
     convert(binary, rgb);
 
     ok = save("example2_binary.png", rgb);
+
     return !ok;
 }

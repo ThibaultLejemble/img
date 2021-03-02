@@ -8,9 +8,9 @@ namespace img {
 //!
 //! \brief The BinaryImage class represents a 2D binary image.
 //!
-//! Values are boolean with the following rules:
-//!   True  = 1 = white
-//!   False = 0 = black
+//! Values are boolean with the following general rule:
+//!   True  = 1 = white = foreground
+//!   False = 0 = black = background
 //!
 //! The top-left pixel is at coordinate (0,0).
 //! The storage is in row-major order.
