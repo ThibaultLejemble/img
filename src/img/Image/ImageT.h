@@ -27,6 +27,7 @@ class ImageT
 {
     // Types -------------------------------------------------------------------
 public:
+    using Type             = T;
     using Color            = Eigen::Matrix<T, C, 1>;
     using ColorAccess      = Eigen::Map<Color>;
     using ConstColorAccess = Eigen::Map<const Color>;
@@ -41,7 +42,7 @@ public:
     inline bool empty();
     inline int height() const;
     inline int width() const;
-    inline int depth() const;
+    constexpr int depth();
     inline int size() const;
     inline int capacity() const;
 
@@ -124,7 +125,7 @@ int ImageT<T,C>::width() const
 }
 
 template<typename T, int C>
-int ImageT<T,C>::depth() const
+constexpr int ImageT<T,C>::depth()
 {
     return C;
 }
