@@ -26,15 +26,15 @@ public:
 
     // Image -------------------------------------------------------------------
 public:
-    Image();
-    Image(int height, int width);
-    Image(const Image& other);
-    Image(Image&& other);
+    inline Image();
+    inline Image(int height, int width);
+    inline Image(const Image& other);
+    inline Image(Image&& other);
 
-    Image& operator = (const Image& other);
-    Image& operator = (Image&& other);
+    inline Image& operator = (const Image& other);
+    inline Image& operator = (Image&& other);
 
-    ~Image();
+    inline ~Image();
 
     // Capacity ----------------------------------------------------------------
 public:
@@ -51,18 +51,18 @@ public:
     inline ConstColorAccess operator() (int k) const;
     inline ColorAccess      operator() (int k);
 
-    const float* data() const;
-          float* data();
+    inline const float* data() const;
+    inline       float* data();
 
-    ConstColorAccess eval(float u, float v) const;
+    inline ConstColorAccess eval(float u, float v) const;
 
     // Modifiers ---------------------------------------------------------------
 public:
-    void clear();
-    void resize(int height, int width);
-    void set_alpha(float alpha);
-    void fill(float r, float g, float b, float a = 1.f);
-    void fill(float gray, float a = 1.f);
+    inline void clear();
+    inline void resize(int height, int width);
+    inline void set_alpha(float alpha);
+    inline void fill(float r, float g, float b, float a = 1.f);
+    inline void fill(float gray, float a = 1.f);
 
     // Internal ----------------------------------------------------------------
 protected:
@@ -167,3 +167,5 @@ int Image::index(int i, int j) const
 }
 
 } // namespace img
+
+#include <img/Image/Image.hpp>
