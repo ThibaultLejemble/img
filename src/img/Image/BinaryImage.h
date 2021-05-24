@@ -28,15 +28,15 @@ public:
 
     // BinaryImage -------------------------------------------------------------
 public:
-    BinaryImage();
-    BinaryImage(int height, int width);
-    BinaryImage(const BinaryImage& other);
-    BinaryImage(BinaryImage&& other);
+    inline BinaryImage();
+    inline BinaryImage(int height, int width);
+    inline BinaryImage(const BinaryImage& other);
+    inline BinaryImage(BinaryImage&& other);
 
-    BinaryImage& operator = (const BinaryImage& other);
-    BinaryImage& operator = (BinaryImage&& other);
+    inline BinaryImage& operator = (const BinaryImage& other);
+    inline BinaryImage& operator = (BinaryImage&& other);
 
-    ~BinaryImage();
+    inline ~BinaryImage();
 
     // Capacity ----------------------------------------------------------------
 public:
@@ -55,9 +55,9 @@ public:
 
     // Modifiers ---------------------------------------------------------------
 public:
-    void clear();
-    void resize(int height, int width);
-    void fill(bool b);
+    inline void clear();
+    inline void resize(int height, int width);
+    inline void fill(bool b);
 
     // Internal ----------------------------------------------------------------
 protected:
@@ -136,3 +136,5 @@ int BinaryImage::index(int i, int j) const
 }
 
 } // namespace img
+
+#include <img/Image/BinaryImage.hpp>

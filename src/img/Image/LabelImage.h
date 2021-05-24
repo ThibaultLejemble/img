@@ -22,15 +22,15 @@ public:
 
     // LabelImage -------------------------------------------------------------
 public:
-    LabelImage();
-    LabelImage(int height, int width);
-    LabelImage(const LabelImage& other);
-    LabelImage(LabelImage&& other);
+    inline LabelImage();
+    inline LabelImage(int height, int width);
+    inline LabelImage(const LabelImage& other);
+    inline LabelImage(LabelImage&& other);
 
-    LabelImage& operator = (const LabelImage& other);
-    LabelImage& operator = (LabelImage&& other);
+    inline LabelImage& operator = (const LabelImage& other);
+    inline LabelImage& operator = (LabelImage&& other);
 
-    ~LabelImage();
+    inline ~LabelImage();
 
     // Capacity ----------------------------------------------------------------
 public:
@@ -49,9 +49,9 @@ public:
 
     // Modifiers ---------------------------------------------------------------
 public:
-    void clear();
-    void resize(int height, int width);
-    void fill(int value);
+    inline void clear();
+    inline void resize(int height, int width);
+    inline void fill(int value);
 
     // Internal ----------------------------------------------------------------
 protected:
@@ -130,3 +130,5 @@ int LabelImage::index(int i, int j) const
 }
 
 } // namespace img
+
+#include <img/Image/LabelImage.hpp>

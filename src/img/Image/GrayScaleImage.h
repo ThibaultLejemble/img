@@ -23,15 +23,15 @@ public:
 
     // GrayScale ---------------------------------------------------------------
 public:
-    GrayScaleImage();
-    GrayScaleImage(int height, int width);
-    GrayScaleImage(const GrayScaleImage& other);
-    GrayScaleImage(GrayScaleImage&& other);
+    inline GrayScaleImage();
+    inline GrayScaleImage(int height, int width);
+    inline GrayScaleImage(const GrayScaleImage& other);
+    inline GrayScaleImage(GrayScaleImage&& other);
 
-    GrayScaleImage& operator = (const GrayScaleImage& other);
-    GrayScaleImage& operator = (GrayScaleImage&& other);
+    inline GrayScaleImage& operator = (const GrayScaleImage& other);
+    inline GrayScaleImage& operator = (GrayScaleImage&& other);
 
-    ~GrayScaleImage();
+    inline ~GrayScaleImage();
 
     // Capacity ----------------------------------------------------------------
 public:
@@ -48,16 +48,16 @@ public:
     inline ConstColorAccess operator() (int k) const;
     inline ColorAccess      operator() (int k);
 
-    const float* data() const;
-          float* data();
+    inline const float* data() const;
+    inline       float* data();
 
-    ConstColorAccess eval(float u, float v) const;
+    inline ConstColorAccess eval(float u, float v) const;
 
     // Modifiers ---------------------------------------------------------------
 public:
-    void clear();
-    void resize(int height, int width);
-    void fill(float value);
+    inline void clear();
+    inline void resize(int height, int width);
+    inline void fill(float value);
 
     // Internal ----------------------------------------------------------------
 protected:
@@ -162,3 +162,5 @@ int GrayScaleImage::index(int i, int j) const
 }
 
 } // namespace img
+
+#include <img/Image/GrayScaleImage.hpp>
