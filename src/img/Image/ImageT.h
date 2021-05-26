@@ -22,6 +22,35 @@ using ImageRGBAi = ImageT<int,   4>;
 using ImageRGBAf = ImageT<float, 4>;
 using ImageRGBAd = ImageT<double,4>;
 
+template<typename TFrom, int CFrom, typename TTo, int CTo>
+typename ImageT<TTo,CTo>::Color DefaultCaster(const typename ImageT<TFrom,CFrom>::ConstColorAccess& c)
+{
+    //TODO
+    return ImageT<TTo,CTo>::Color::Zero();
+};
+
+template<typename TFrom, int CFrom, typename TTo, int CTo, class Caster>
+inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caster)
+{
+    const auto h = from.height();
+    const auto w = from.width();
+    to.resize(h, w);
+    //TODO omp ?
+    for (int i = 0; i < h; ++i)
+    {
+        for (int j = 0; j < w; ++j)
+        {
+            to(i,j) = caster(from(i,j));
+        }
+    }
+}
+
+template<typename TFrom, int CFrom, typename TTo, int CTo>
+inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to)
+{
+    cast(from, to, &DefaultCaster<TFrom, CFrom, TTo, CTo>);
+}
+
 template<typename T, int C>
 class ImageT
 {
