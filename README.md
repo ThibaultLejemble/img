@@ -23,3 +23,12 @@ cmake ..
 make -j
 ./example1_fractal
 ``` 
+
+# TODO (generic ImageT)
+- cast 
+- bitmap io
+- png io
+- Eigen on/off
+- bool support
+- as_matrix/as_tensor
+- eval (closest,trilinear)
