@@ -68,11 +68,11 @@ public:
 
     // Internal ----------------------------------------------------------------
 protected:
-    inline const float* at(int i, int j) const;
-    inline       float* at(int i, int j);
+    inline const T* at(int i, int j) const;
+    inline       T* at(int i, int j);
 
-    inline const float* at(int k) const;
-    inline       float* at(int k);
+    inline const T* at(int k) const;
+    inline       T* at(int k);
 
     inline int index(int i, int j) const;
 
@@ -223,28 +223,28 @@ void ImageT<T,C>::fill(const Color& color)
 // Internal --------------------------------------------------------------------
 
 template<typename T, int C>
-const float* ImageT<T,C>::at(int i, int j) const
+const T* ImageT<T,C>::at(int i, int j) const
 {
     assert(0 <= i && i < height() && 0 <= j && j <= width());
     return &m_data[index(i,j)];
 }
 
 template<typename T, int C>
-float* ImageT<T,C>::at(int i, int j)
+T* ImageT<T,C>::at(int i, int j)
 {
     assert(0 <= i && i < height() && 0 <= j && j <= width());
     return &m_data[index(i,j)];
 }
 
 template<typename T, int C>
-const float* ImageT<T,C>::at(int k) const
+const T* ImageT<T,C>::at(int k) const
 {
     assert(0 <= k && k < height() * width());
     return &m_data[C * k];
 }
 
 template<typename T, int C>
-float* ImageT<T,C>::at(int k)
+T* ImageT<T,C>::at(int k)
 {
     assert(0 <= k && k < height() * width());
     return &m_data[C * k];
