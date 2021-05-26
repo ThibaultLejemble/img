@@ -22,12 +22,27 @@ using ImageRGBAi = ImageT<int,   4>;
 using ImageRGBAf = ImageT<float, 4>;
 using ImageRGBAd = ImageT<double,4>;
 
-template<typename TFrom, int CFrom, typename TTo, int CTo>
-typename ImageT<TTo,CTo>::Color DefaultCaster(const typename ImageT<TFrom,CFrom>::ConstColorAccess& c)
-{
-    //TODO
-    return ImageT<TTo,CTo>::Color::Zero();
+namespace internal {
+
+template<typename TTo> struct Average {
+    template<typename TFrom> static TTo compute(TFrom r, TFrom g, TFrom b) {
+        return (r + g + b) / 3.f;
+    }
 };
+
+
+template<typename TFrom, int CFrom, typename TTo, int CTo> struct DefaultCaster {
+    typename ImageT<TTo,CTo>::Color operator()(const typename ImageT<TFrom,CFrom>::ConstColorAccess& c);
+};
+
+template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,1> {
+    auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
+        return typename ImageT<TTo,1>::Color(Average<TTo>::compute(c[0],c[1],c[2]));
+    }
+};
+
+} // namespace internal
+
 
 template<typename TFrom, int CFrom, typename TTo, int CTo, class Caster>
 inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caster)
@@ -48,7 +63,7 @@ inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&
 template<typename TFrom, int CFrom, typename TTo, int CTo>
 inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to)
 {
-    cast(from, to, &DefaultCaster<TFrom, CFrom, TTo, CTo>);
+    cast(from, to, internal::DefaultCaster<TFrom, CFrom, TTo, CTo>());
 }
 
 template<typename T, int C>
