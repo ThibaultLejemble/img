@@ -24,6 +24,11 @@ using ImageRGBAd = ImageT<double,4>;
 
 namespace internal {
 
+template<typename T> constexpr T channel_one();
+template<> constexpr int    channel_one<int   >() {return 255;}
+template<> constexpr float  channel_one<float >() {return 1.f;}
+template<> constexpr double channel_one<double>() {return 1.;}
+
 template<typename TFrom, typename TTo>
 inline TTo cast_channel(TFrom val) {return val;}
 template<> inline int    cast_channel(float val) {return int(255.f * val);}
@@ -32,97 +37,126 @@ template<> inline float  cast_channel(int val)   {return float(val)  / 255.f;}
 template<> inline double cast_channel(int val)   {return double(val) / 255.;}
 
 // use struct since partial specialization are not allowed for functions
-template<typename TTo> struct Average {
-    template<typename TFrom> static TTo compute(TFrom r, TFrom g, TFrom b) {
-        return (r + g + b) / 3.f;
+template<typename TFrom, typename TTo> struct Average {
+    static TTo compute(TFrom r, TFrom g, TFrom b) {
+        return (r + g + b) / 3.;
     }
 };
 
-template<typename TFrom, int CFrom, typename TTo, int CTo> struct DefaultCaster {
-    typename ImageT<TTo,CTo>::Color operator()(const typename ImageT<TFrom,CFrom>::ConstColorAccess& c);
+template<typename TFrom, int CFrom, typename TTo, int CTo>
+struct DefaultCaster {
+    typename ImageT<TTo,CTo>::Color operator()(
+      const typename ImageT<TFrom,CFrom>::ConstColorAccess& c);
 };
 
 //! \brief RGBA to G
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,1> {
     auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
-        return typename ImageT<TTo,1>::Color(Average<TTo>::compute(c[0],c[1],c[2]));
+        return typename ImageT<TTo,1>::Color(
+              Average<TFrom,TTo>::compute(c[0],c[1],c[2]));
     }
 };
 
 //! \brief RGB to G
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,1> {
     auto operator()(const typename ImageT<TFrom,3>::ConstColorAccess& c) {
-        return typename ImageT<TTo,1>::Color(Average<TTo>::compute(c[0],c[1],c[2]));
+        return typename ImageT<TTo,1>::Color(
+              Average<TFrom,TTo>::compute(c[0],c[1],c[2]));
     }
 };
 
 //! \brief GA to G
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,1> {
     auto operator()(const typename ImageT<TFrom,2>::ConstColorAccess& c) {
-        return typename ImageT<TTo,1>::Color(c[0]);
+        return typename ImageT<TTo,1>::Color(cast_channel<TFrom,TTo>(c[0]));
     }
 };
 
 //! \brief RGBA to GA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,2> {
     auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
-        return typename ImageT<TTo,2>::Color(Average<TTo>::compute(c[0],c[1],c[2]), c[3]);
+        return typename ImageT<TTo,2>::Color(
+              Average<TFrom,TTo>::compute(c[0],c[1],c[2]),
+              cast_channel<TFrom,TTo>(c[3]));
     }
 };
 
 //! \brief RGB to GA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,2> {
     auto operator()(const typename ImageT<TFrom,3>::ConstColorAccess& c) {
-        return typename ImageT<TTo,2>::Color(Average<TTo>::compute(c[0],c[1],c[2]), 1.0);
+        return typename ImageT<TTo,2>::Color(
+              Average<TFrom,TTo>::compute(c[0],c[1],c[2]), channel_one<TTo>());
     }
 };
 
 //! \brief G to GA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,2> {
     auto operator()(const typename ImageT<TFrom,1>::ConstColorAccess& c) {
-        return typename ImageT<TTo,2>::Color(c[0], 1.0);
+        return typename ImageT<TTo,2>::Color(
+              cast_channel<TFrom,TTo>(c[0]), channel_one<TTo>());
     }
 };
 
 //! \brief RGBA to RGB
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,3> {
     auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
-        return typename ImageT<TTo,3>::Color(c[0],c[1],c[2]);
+        return typename ImageT<TTo,3>::Color(
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[1]),
+              cast_channel<TFrom,TTo>(c[2]));
     }
 };
 
 //! \brief GA to RGB
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,3> {
     auto operator()(const typename ImageT<TFrom,2>::ConstColorAccess& c) {
-        return typename ImageT<TTo,3>::Color(c[0],c[0],c[0]);
+        return typename ImageT<TTo,3>::Color(
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[0]));
     }
 };
 
 //! \brief G to RGB
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,3> {
     auto operator()(const typename ImageT<TFrom,1>::ConstColorAccess& c) {
-        return typename ImageT<TTo,3>::Color(c[0],c[0],c[0]);
+      return typename ImageT<TTo,3>::Color(
+            cast_channel<TFrom,TTo>(c[0]),
+            cast_channel<TFrom,TTo>(c[0]),
+            cast_channel<TFrom,TTo>(c[0]));
     }
 };
 
 //! \brief RGB to RGBA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,4> {
     auto operator()(const typename ImageT<TFrom,3>::ConstColorAccess& c) {
-        return typename ImageT<TTo,4>::Color(c[0],c[1],c[2], 1.0);
+        return typename ImageT<TTo,4>::Color(
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[1]),
+              cast_channel<TFrom,TTo>(c[2]),
+              channel_one<TTo>());
     }
 };
 
 //! \brief GA to RGBA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,4> {
     auto operator()(const typename ImageT<TFrom,2>::ConstColorAccess& c) {
-        return typename ImageT<TTo,4>::Color(c[0],c[0],c[0],c[1]);
+        return typename ImageT<TTo,4>::Color(
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[1]));
     }
 };
 
 //! \brief G to RGBA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,4> {
     auto operator()(const typename ImageT<TFrom,1>::ConstColorAccess& c) {
-        return typename ImageT<TTo,4>::Color(c[0],c[0],c[0],1.0);
+        return typename ImageT<TTo,4>::Color(
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c[0]),
+              channel_one<TTo>());
     }
 };
 
