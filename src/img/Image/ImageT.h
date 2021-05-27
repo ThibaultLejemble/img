@@ -39,7 +39,26 @@ template<> inline double cast_channel(int val)   {return double(val) / 255.;}
 // use struct since partial specialization are not allowed for functions
 template<typename TFrom, typename TTo> struct Average {
     static TTo compute(TFrom r, TFrom g, TFrom b) {
-        return (r + g + b) / 3.;
+        return (r + g + b) / TFrom(3);
+    }
+};
+
+template<typename TFrom> struct Average<TFrom,int> {
+    static int compute(TFrom r, TFrom g, TFrom b)
+    {
+        return cast_channel<int>((r + g + b) / TFrom(3));
+    }
+};
+
+template<typename TTo> struct Average<int,TTo> {
+    static TTo compute(int r, int g, int b) {
+        return double(r + g + b) / 3. / 255.;
+    }
+};
+
+template<> struct Average<int,int> {
+    static int compute(int r, int g, int b) {
+        return int(std::round(double(r + g + b) / 3.));
     }
 };
 
