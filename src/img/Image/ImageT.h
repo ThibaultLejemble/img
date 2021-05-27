@@ -3,6 +3,8 @@
 #include <Eigen/Core>
 
 #include <vector>
+#include <string>
+#include <fstream>
 
 namespace img {
 
@@ -29,6 +31,11 @@ inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&
 
 template<typename TFrom, int CFrom, typename TTo, int CTo>
 inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to);
+
+// io --------------------------------------------------------------------------
+
+template<typename T, int C>
+inline bool save(const std::string& filename, const ImageT<T,C>& image);
 
 // -----------------------------------------------------------------------------
 
@@ -311,6 +318,19 @@ template<typename TFrom, int CFrom, typename TTo, int CTo>
 void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to)
 {
     cast(from, to, internal::DefaultCaster<TFrom, CFrom, TTo, CTo>());
+}
+
+// io --------------------------------------------------------------------------
+
+template<typename T, int C>
+bool save(const std::string& filename, const ImageT<T,C>& image)
+{
+    std::ofstream ofs(filename);
+    if(!ofs.is_open()) return false;
+
+    std::abort(); //TODO
+
+    return true;
 }
 
 // Image -----------------------------------------------------------------------
