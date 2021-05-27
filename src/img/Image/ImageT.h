@@ -22,6 +22,83 @@ using ImageRGBAi = ImageT<int,   4>;
 using ImageRGBAf = ImageT<float, 4>;
 using ImageRGBAd = ImageT<double,4>;
 
+// cast ------------------------------------------------------------------------
+
+template<typename TFrom, int CFrom, typename TTo, int CTo, class Caster>
+inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caster);
+
+template<typename TFrom, int CFrom, typename TTo, int CTo>
+inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to);
+
+// -----------------------------------------------------------------------------
+
+template<typename T, int C>
+class ImageT
+{
+    // Types -------------------------------------------------------------------
+public:
+    using Type             = T;
+    using Color            = Eigen::Matrix<T, C, 1>;
+    using ColorAccess      = Eigen::Map<Color>;
+    using ConstColorAccess = Eigen::Map<const Color>;
+
+    // Image -------------------------------------------------------------------
+public:
+    inline ImageT();
+    inline ImageT(int height, int width);
+
+    // Capacity ----------------------------------------------------------------
+public:
+    inline bool empty();
+    inline int height() const;
+    inline int width() const;
+    constexpr int depth();
+    inline int size() const;
+    inline int capacity() const;
+
+    // Accessors ---------------------------------------------------------------
+public:
+    inline      ColorAccess operator()(int i, int j);
+    inline ConstColorAccess operator()(int i, int j) const;
+
+    inline const std::vector<T>& data() const;
+    inline       std::vector<T>& data();
+
+    inline const T* raw() const;
+    inline       T* raw();
+
+    inline ConstColorAccess eval(float u, float v) const;
+
+    // Modifiers ---------------------------------------------------------------
+public:
+    inline void clear();
+    inline void resize(int height, int width);
+    inline void fill(const T& value);
+    inline void fill(const Color& color);
+
+    // Internal ----------------------------------------------------------------
+protected:
+    inline const T* at(int i, int j) const;
+    inline       T* at(int i, int j);
+
+    inline const T* at(int k) const;
+    inline       T* at(int k);
+
+    inline int index(int i, int j) const;
+
+    // Data --------------------------------------------------------------------
+protected:
+    int            m_height;
+    int            m_width;
+    std::vector<T> m_data;
+};
+
+} // namespace img
+
+// =============================================================================
+
+namespace img {
+
 namespace internal {
 
 template<typename T> constexpr T channel_one();
@@ -181,8 +258,10 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,4> {
 
 } // namespace internal
 
+// cast ------------------------------------------------------------------------
+
 template<typename TFrom, int CFrom, typename TTo, int CTo, class Caster>
-inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caster)
+void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caster)
 {
     const auto h = from.height();
     const auto w = from.width();
@@ -198,77 +277,10 @@ inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&
 }
 
 template<typename TFrom, int CFrom, typename TTo, int CTo>
-inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to)
+void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to)
 {
     cast(from, to, internal::DefaultCaster<TFrom, CFrom, TTo, CTo>());
 }
-
-template<typename T, int C>
-class ImageT
-{
-    // Types -------------------------------------------------------------------
-public:
-    using Type             = T;
-    using Color            = Eigen::Matrix<T, C, 1>;
-    using ColorAccess      = Eigen::Map<Color>;
-    using ConstColorAccess = Eigen::Map<const Color>;
-
-    // Image -------------------------------------------------------------------
-public:
-    inline ImageT();
-    inline ImageT(int height, int width);
-
-    // Capacity ----------------------------------------------------------------
-public:
-    inline bool empty();
-    inline int height() const;
-    inline int width() const;
-    constexpr int depth();
-    inline int size() const;
-    inline int capacity() const;
-
-    // Accessors ---------------------------------------------------------------
-public:
-    inline      ColorAccess operator()(int i, int j);
-    inline ConstColorAccess operator()(int i, int j) const;
-
-    inline const std::vector<T>& data() const;
-    inline       std::vector<T>& data();
-
-    inline const T* raw() const;
-    inline       T* raw();
-
-    inline ConstColorAccess eval(float u, float v) const;
-
-    // Modifiers ---------------------------------------------------------------
-public:
-    inline void clear();
-    inline void resize(int height, int width);
-    inline void fill(const T& value);
-    inline void fill(const Color& color);
-
-    // Internal ----------------------------------------------------------------
-protected:
-    inline const T* at(int i, int j) const;
-    inline       T* at(int i, int j);
-
-    inline const T* at(int k) const;
-    inline       T* at(int k);
-
-    inline int index(int i, int j) const;
-
-    // Data --------------------------------------------------------------------
-protected:
-    int            m_height;
-    int            m_width;
-    std::vector<T> m_data;
-};
-
-} // namespace img
-
-// =============================================================================
-
-namespace img {
 
 // Image -----------------------------------------------------------------------
 
