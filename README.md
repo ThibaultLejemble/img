@@ -32,3 +32,5 @@ make -j
 - bool support
 - as_matrix/as_tensor
 - eval (closest,trilinear)
+- colormap
+- cuda
