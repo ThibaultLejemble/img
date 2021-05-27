@@ -89,6 +89,9 @@ public:
     inline      ColorAccess operator()(int i, int j);
     inline ConstColorAccess operator()(int i, int j) const;
 
+    inline      ColorAccess operator()(int k);
+    inline ConstColorAccess operator()(int k) const;
+
     inline const std::vector<T>& data() const;
     inline       std::vector<T>& data();
 
@@ -428,6 +431,18 @@ template<typename T, int C>
 typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::operator()(int i, int j) const
 {
     return ConstColorAccess(at(i,j));
+}
+
+template<typename T, int C>
+typename ImageT<T,C>::ColorAccess ImageT<T,C>::operator()(int k)
+{
+    return ColorAccess(at(k));
+}
+
+template<typename T, int C>
+typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::operator()(int k) const
+{
+    return ConstColorAccess(at(k));
 }
 
 template<typename T, int C>
