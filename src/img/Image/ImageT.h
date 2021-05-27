@@ -24,12 +24,19 @@ using ImageRGBAd = ImageT<double,4>;
 
 namespace internal {
 
+template<typename TFrom, typename TTo>
+inline TTo cast_channel(TFrom val) {return val;}
+template<> inline int    cast_channel(float val) {return int(255.f * val);}
+template<> inline int    cast_channel(double val){return int(255.  * val);}
+template<> inline float  cast_channel(int val)   {return float(val)  / 255.f;}
+template<> inline double cast_channel(int val)   {return double(val) / 255.;}
+
+// use struct since partial specialization are not allowed for functions
 template<typename TTo> struct Average {
     template<typename TFrom> static TTo compute(TFrom r, TFrom g, TFrom b) {
         return (r + g + b) / 3.f;
     }
 };
-
 
 template<typename TFrom, int CFrom, typename TTo, int CTo> struct DefaultCaster {
     typename ImageT<TTo,CTo>::Color operator()(const typename ImageT<TFrom,CFrom>::ConstColorAccess& c);
