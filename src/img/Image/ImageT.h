@@ -41,6 +41,9 @@ public:
     using Color            = Eigen::Matrix<T, C, 1>;
     using ColorAccess      = Eigen::Map<Color>;
     using ConstColorAccess = Eigen::Map<const Color>;
+    using Matrix           = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
+    using MatrixMap        = Eigen::Map<Matrix>;
+    using ConstMatrixMap   = Eigen::Map<const Matrix>;
 
     // Image -------------------------------------------------------------------
 public:
@@ -93,6 +96,9 @@ public:
     inline       T* raw();
 
     inline ConstColorAccess eval(float u, float v) const;
+
+    inline ConstMatrixMap as_matrix() const;
+    inline      MatrixMap as_matrix();
 
     // Modifiers ---------------------------------------------------------------
 public:
@@ -452,6 +458,18 @@ typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::eval(float u, float v) const
     const int i = std::floor(u * (m_height-1));
     const int j = std::floor(v * (m_width-1));
     return this->operator()(i,j);
+}
+
+template<typename T, int C>
+typename ImageT<T,C>::ConstMatrixMap ImageT<T,C>::as_matrix() const
+{
+    std::abort(); //TODO
+}
+
+template<typename T, int C>
+typename ImageT<T,C>::MatrixMap ImageT<T,C>::as_matrix()
+{
+    std::abort(); //TODO
 }
 
 // Modifiers -------------------------------------------------------------------
