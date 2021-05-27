@@ -46,6 +46,31 @@ public:
 public:
     inline ImageT();
     inline ImageT(int height, int width);
+    inline ImageT(const ImageT&) = default;
+    inline ImageT(ImageT&&) = default;
+
+    inline ImageT& operator=(const ImageT&) = default;
+    inline ImageT& operator=(ImageT&&) = default;
+
+    template<typename T2, int C2>
+    inline explicit ImageT(const ImageT<T2,C2>& other);
+
+    template<typename T2, int C2>
+    inline ImageT& operator=(const ImageT<T2,C2>& other);
+
+    // Cast --------------------------------------------------------------------
+public:
+    template<class ImageT2>
+    inline ImageT2 cast() const;
+
+    template<typename T2, int C2>
+    inline ImageT<T2,C2> cast() const;
+
+    template<typename T2>
+    inline ImageT<T2,C> cast() const;
+
+    template<int C2>
+    inline ImageT<T,C2> cast() const;
 
     // Capacity ----------------------------------------------------------------
 public:
@@ -295,6 +320,54 @@ ImageT<T,C>::ImageT(int height, int width) :
     m_width(width),
     m_data(C * width * height)
 {
+}
+
+template<typename T, int C>
+template<typename T2, int C2>
+ImageT<T,C>::ImageT(const ImageT<T2,C2>& other)  :
+    m_height(other.height()),
+    m_width(other.width()),
+    m_data(C * other.width() * other.height())
+{
+    img::cast(other, *this);
+}
+
+template<typename T, int C>
+template<typename T2, int C2>
+ImageT<T,C>& ImageT<T,C>::operator=(const ImageT<T2,C2>& other)
+{
+    img::cast(other, *this);
+    return *this;
+}
+
+// Cast ------------------------------------------------------------------------
+
+template<typename T, int C>
+template<class ImageT2>
+ImageT2 ImageT<T,C>::cast() const
+{
+    return ImageT2(*this);
+}
+
+template<typename T, int C>
+template<typename T2, int C2>
+ImageT<T2,C2> ImageT<T,C>::cast() const
+{
+    return ImageT<T2,C2>(*this);
+}
+
+template<typename T, int C>
+template<typename T2>
+ImageT<T2,C> ImageT<T,C>::cast() const
+{
+    return ImageT<T2,C>(*this);
+}
+
+template<typename T, int C>
+template<int C2>
+ImageT<T,C2> ImageT<T,C>::cast() const
+{
+    return ImageT<T,C2>(*this);
 }
 
 // Capacity --------------------------------------------------------------------
