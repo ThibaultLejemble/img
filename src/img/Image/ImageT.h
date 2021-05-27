@@ -100,6 +100,8 @@ public:
     inline ConstMatrixMap as_matrix() const;
     inline      MatrixMap as_matrix();
 
+    //TODO as_tensor()
+
     // Modifiers ---------------------------------------------------------------
 public:
     inline void clear();
