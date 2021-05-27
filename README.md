@@ -25,7 +25,6 @@ make -j
 ``` 
 
 # TODO (generic ImageT)
-- cast 
 - bitmap io
 - png io
 - Eigen on/off
@@ -33,4 +32,4 @@ make -j
 - as_matrix/as_tensor
 - eval (closest,trilinear)
 - colormap
-- cuda
+- cuda ?
