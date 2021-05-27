@@ -299,16 +299,11 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,4> {
 template<typename TFrom, int CFrom, typename TTo, int CTo, class Caster>
 void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caster)
 {
-    const auto h = from.height();
-    const auto w = from.width();
-    to.resize(h, w);
+    to.resize(from.height(), from.width());
     //TODO omp ?
-    for (int i = 0; i < h; ++i)
+    for (int k = 0; k < from.size(); ++k)
     {
-        for (int j = 0; j < w; ++j)
-        {
-            to(i,j) = caster(from(i,j));
-        }
+        to(k) = caster(from(k));
     }
 }
 
