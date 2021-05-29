@@ -87,7 +87,7 @@ public:
     inline bool empty();
     inline int height() const;
     inline int width() const;
-    constexpr int depth();
+    constexpr int depth() const;
     inline int size() const;
     inline int capacity() const;
 
@@ -417,7 +417,7 @@ int ImageT<T,C>::width() const
 }
 
 template<typename T, int C>
-constexpr int ImageT<T,C>::depth()
+constexpr int ImageT<T,C>::depth() const
 {
     return C;
 }
