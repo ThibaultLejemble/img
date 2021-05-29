@@ -1,52 +1,43 @@
 #include <img/Image/ImageT.h>
 #include <img/IO/ImageT.h>
 
+#include <iostream>
+
 using namespace img;
-
-struct Foo {};
-void bar(Foo){}
-
-using Image = ImageRGBAf;
 
 int main()
 {
-    Image image(610,1080);
+    constexpr auto N = 256;
+    ImageRGBAd image(N,N);
+    for (int i = 0; i < image.height(); ++i) {
+        for (int j = 0; j < image.width(); ++j) {
+            const double u = double(i)/(image.height()-1);
+            const double v = double(j)/(image.width()-1);
 
-    const Image::Color black(0,0,0,1);
-    const Image::Color green(0,1,0,1);
-    const Image::Color white(1,1,1,1);
-    int max_iteration = 100;
-    for(int i=0; i<image.height(); ++i)
-    {
-        for(int j=0; j<image.width(); ++j)
-        {
-            const float x0 = float(j)/(image.width()-1)  * 3.5f - 2.5f;
-            const float y0 = float(i)/(image.height()-1) * 2.0f - 1.0f;
-            float x = 0.f;
-            float y = 0.f;
-            int iteration = 0;
-            while(x*x + y*y <= 4 && iteration < max_iteration)
-            {
-                const float xtemp = x*x - y*y + x0;
-                y = 2*x*y + y0;
-                x = xtemp;
-                ++iteration;
-            }
-            if(iteration == max_iteration)
-            {
-                image(i,j) = white;
-            }
-            else
-            {
-                const float t = float(iteration)/max_iteration;
-                image(i,j) = (1.f-t)*black + t*green;
-            }
+            const double r = 0.5 * (1.0 + std::cos(M_PI * (1+1*v) * u));
+            const double g = 0.5 * (1.0 + std::cos(M_PI * (1+2*u) * v));
+            const double b = 0.5 * (1.0 + std::cos(M_PI * (1+4*v) * u));
+            const double a = 0.5 * (1.0 + std::cos(M_PI * (1-u)*v));
+
+            image(i,j)[0] = r;
+            image(i,j)[1] = g;
+            image(i,j)[2] = b;
+            image(i,j)[3] = a;
         }
     }
 
-    // save image
-    const bool ok = io::save("example0_test.png", image);
-    return !ok;
+    io::save("exmaple0_Gi.png",    ImageGi   (image));
+    io::save("exmaple0_Gf.png",    ImageGf   (image));
+    io::save("exmaple0_Gd.png",    ImageGd   (image));
+    io::save("exmaple0_GAi.png",   ImageGAi  (image));
+    io::save("exmaple0_GAf.png",   ImageGAf  (image));
+    io::save("exmaple0_GAd.png",   ImageGAd  (image));
+    io::save("exmaple0_RGBi.png",  ImageRGBi (image));
+    io::save("exmaple0_RGBf.png",  ImageRGBf (image));
+    io::save("exmaple0_RGBd.png",  ImageRGBd (image));
+    io::save("exmaple0_RGBAi.png", ImageRGBAi(image));
+    io::save("exmaple0_RGBAf.png", ImageRGBAf(image));
+    io::save("exmaple0_RGBAd.png", ImageRGBAd(image));
 
     return 1;
 }
