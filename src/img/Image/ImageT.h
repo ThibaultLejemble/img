@@ -170,7 +170,7 @@ template<typename TFrom, typename TTo> struct Average {
 template<typename TFrom> struct Average<TFrom,int> {
     static int compute(TFrom r, TFrom g, TFrom b)
     {
-        return cast_channel<int>((r + g + b) / TFrom(3));
+        return cast_channel<TFrom,int>((r + g + b) / TFrom(3));
     }
 };
 
@@ -300,6 +300,33 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,4> {
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[0]),
               channel_one<TTo>());
+    }
+};
+
+template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,1> {
+    auto operator()(const typename ImageT<TFrom,1>::ConstColorAccess& c) {
+        return typename ImageT<TTo,1>::Color(cast_channel<TFrom,TTo>(c[0]));
+    }
+};
+template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,2> {
+    auto operator()(const typename ImageT<TFrom,2>::ConstColorAccess& c) {
+        return typename ImageT<TTo,2>::Color(cast_channel<TFrom,TTo>(c[0]),
+                                             cast_channel<TFrom,TTo>(c[1]));
+    }
+};
+template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,3> {
+    auto operator()(const typename ImageT<TFrom,3>::ConstColorAccess& c) {
+        return typename ImageT<TTo,3>::Color(cast_channel<TFrom,TTo>(c[0]),
+                                             cast_channel<TFrom,TTo>(c[1]),
+                                             cast_channel<TFrom,TTo>(c[2]));
+    }
+};
+template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,4> {
+    auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
+        return typename ImageT<TTo,4>::Color(cast_channel<TFrom,TTo>(c[0]),
+                                             cast_channel<TFrom,TTo>(c[1]),
+                                             cast_channel<TFrom,TTo>(c[2]),
+                                             cast_channel<TFrom,TTo>(c[3]));
     }
 };
 
