@@ -56,6 +56,8 @@ public:
 public:
     inline ImageT();
     inline ImageT(int height, int width);
+    inline ImageT(int height, int width, unsigned char* data);
+    inline ImageT(int height, int width, unsigned char* data, int depth);
     inline ImageT(const ImageT&) = default;
     inline ImageT(ImageT&&) = default;
 
@@ -155,6 +157,8 @@ template<> inline int    cast_channel(float val) {return int(255.f * val);}
 template<> inline int    cast_channel(double val){return int(255.  * val);}
 template<> inline float  cast_channel(int val)   {return float(val)  / 255.f;}
 template<> inline double cast_channel(int val)   {return double(val) / 255.;}
+template<> inline float  cast_channel(unsigned char val)   {return float(val)  / 255.f;}
+template<> inline double cast_channel(unsigned char val)   {return double(val) / 255.;}
 
 // use struct since partial specialization are not allowed for functions
 template<typename TFrom, typename TTo> struct Average {
@@ -346,6 +350,35 @@ ImageT<T,C>::ImageT(int height, int width) :
     m_width(width),
     m_data(C * width * height)
 {
+}
+
+//!
+//! \brief used for io operations
+//! \warning data must point to an array of size height*size*depth
+//! \todo could be optimized since cast is used
+//!
+template<typename T, int C>
+ImageT<T,C>::ImageT(int height, int width, unsigned char* data, int depth) : ImageT(height, width)
+{
+    assert(0 < depth && depth <= 4);
+
+         if(depth == 1) *this = ImageT<T,1>(height, width, data);
+    else if(depth == 2) *this = ImageT<T,2>(height, width, data);
+    else if(depth == 3) *this = ImageT<T,3>(height, width, data);
+    else if(depth == 4) *this = ImageT<T,4>(height, width, data);
+}
+
+//!
+//! \brief used for io operations
+//! \warning data must point to an array of size height*size*C
+//!
+template<typename T, int C>
+ImageT<T,C>::ImageT(int height, int width, unsigned char* data) : ImageT(height, width)
+{
+    for(int k = 0; k < height * width * C; ++k)
+    {
+        m_data[k] = internal::cast_channel<unsigned char,T>(data[k]);
+    }
 }
 
 template<typename T, int C>

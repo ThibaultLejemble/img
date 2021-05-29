@@ -24,117 +24,15 @@ namespace img {
 namespace io {
 
 namespace internal {
-
 template<typename T> char cast(T val);
 template<> inline char cast(int val)    {return char(val);}
 template<> inline char cast(float val)  {return char(int(std::round(255.f * val)));}
 template<> inline char cast(double val) {return char(int(std::round(255.  * val)));}
-
-template<typename T> T cast(char val);
-template<> inline int    cast(char val) {return int(val);}
-template<> inline float  cast(char val) {return float(int(val))  * 255.f;}
-template<> inline double cast(char val) {return double(int(val)) * 255. ;}
-
-template<typename T, int C> struct Caster {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to);
-};
-
-template<> struct Caster<int,1> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<int,2> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<int,3> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<int,4> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-
-template<> struct Caster<float,1> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<float,2> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<float,3> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<float,4> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-
-template<> struct Caster<double,1> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<double,2> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<double,3> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-template<> struct Caster<double,4> {
-    template<class Map> inline static void cast(const std::vector<unsigned char>& from,
-                                                Map to)
-    {
-        std::abort(); //TODO
-    }
-};
-
 } // namespace internal
 
 template<class ImageT>
 bool load(const std::string& filename, ImageT& image, bool flip)
 {
-    using          T = typename ImageT::Type;
-    constexpr auto C = ImageT::depth();
-
     image.clear();
 
     int width   = 0;
@@ -150,16 +48,7 @@ bool load(const std::string& filename, ImageT& image, bool flip)
 
     if(data == nullptr) return false;
 
-    image.resize(height, width);
-
-    for(int k = 0; k < width * height; ++k)
-    {
-        std::vector<unsigned char> pixel(channel);
-        for(int c = 0; c < channel; ++c)
-            pixel[c] = data[channel * k + c];
-
-        internal::Caster<T,C>::cast(pixel, image(k));
-    }
+    image = ImageT(height, width, data, channel);
 
     return true;
 }
