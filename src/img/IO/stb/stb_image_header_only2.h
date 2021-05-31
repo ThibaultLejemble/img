@@ -20,6 +20,15 @@
 #pragma once
 
 #include <stdio.h>
+#include <stdarg.h>
+#include <stddef.h> // ptrdiff_t on osx
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h>
+#include <stdio.h>
+#include <assert.h>
+
+namespace stb {
 
 enum
 {
@@ -108,14 +117,6 @@ STBIDEF int   stbi_zlib_decode_noheader_buffer(char *obuffer, int olen, const ch
 //
 ////   end header file   /////////////////////////////////////////////////////
 
-#include <stdarg.h>
-#include <stddef.h> // ptrdiff_t on osx
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-#include <stdio.h>
-#include <assert.h>
-
 #define STBI_ASSERT(x) assert(x)
 
 #ifndef _MSC_VER
@@ -134,7 +135,9 @@ typedef   signed short stbi__int16;
 typedef unsigned int   stbi__uint32;
 typedef   signed int   stbi__int32;
 #else
+} // namespace stb
 #include <stdint.h>
+namespace stb {
 typedef uint16_t stbi__uint16;
 typedef int16_t  stbi__int16;
 typedef uint32_t stbi__uint32;
@@ -200,12 +203,15 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32)==4 ? 1 : -1];
 
 #if !defined(STBI_NO_SIMD) && (defined(STBI__X86_TARGET) || defined(STBI__X64_TARGET))
 #define STBI_SSE2
+} // namespace stb
 #include <emmintrin.h>
-
+namespace stb {
 #ifdef _MSC_VER
 
 #if _MSC_VER >= 1400  // not VC6
+} // namespace stb
 #include <intrin.h> // __cpuid
+namespace stb {
 static int stbi__cpuid3(void)
 {
    int info[4];
@@ -2167,3 +2173,5 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
    stbi__start_callbacks(&s, (stbi_io_callbacks *) c, user);
    return stbi__is_16_main(&s);
 }
+
+} // namespace stb

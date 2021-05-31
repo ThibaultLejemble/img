@@ -39,12 +39,12 @@ bool load(const std::string& filename, ImageT& image, bool flip)
     int height  = 0;
     int channel = 0;
     constexpr auto desired_channels = 0;
-    stbi_set_flip_vertically_on_load(flip);
-    auto data = stbi_load(filename.c_str(),
-                          &width,
-                          &height,
-                          &channel,
-                          desired_channels);
+    stb::stbi_set_flip_vertically_on_load(flip);
+    auto data = stb::stbi_load(filename.c_str(),
+                               &width,
+                               &height,
+                               &channel,
+                               desired_channels);
 
     if(data == nullptr) return false;
 
@@ -63,12 +63,12 @@ bool save(const std::string& filename, const ImageT& image, bool flip)
         data[k] = internal::cast(image.data()[k]);
     }
 
-    stbi_flip_vertically_on_write(flip);
-    const auto ok = stbi_write_png(filename.c_str(),
-                                   image.width(),
-                                   image.height(),
-                                   image.depth(),
-                                   data.data(), 0);
+    stb::stbi_flip_vertically_on_write(flip);
+    const auto ok = stb::stbi_write_png(filename.c_str(),
+                                        image.width(),
+                                        image.height(),
+                                        image.depth(),
+                                        data.data(), 0);
 
     return ok;
 }

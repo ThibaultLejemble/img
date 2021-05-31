@@ -13,8 +13,8 @@ bool save(const std::string& filename, const Image& rgb, bool flip)
         data[k] = 255 * rgb.data()[k];
     }
 
-    stbi_flip_vertically_on_write(flip);
-    int ok = stbi_write_png(filename.c_str(), rgb.width(), rgb.height(), 4, data, 0);
+    stb::stbi_flip_vertically_on_write(flip);
+    int ok = stb::stbi_write_png(filename.c_str(), rgb.width(), rgb.height(), 4, data, 0);
 
     free(data);
 

@@ -3,13 +3,20 @@
 
 #pragma once
 
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <assert.h>
+
 #define STBIWDEF  inline // extern "C"
 
-//inline static int stbi_write_tga_with_rle = 1;
+namespace stb {
+
 inline static int stbi_write_png_compression_level = 8;
 inline static int stbi_write_force_png_filter = -1;
 inline static int stbi__flip_vertically_on_write = 0;
-
 
 STBIWDEF int stbi_write_png(char const *filename, int w, int h, int comp, const void  *data, int stride_in_bytes);
 
@@ -28,12 +35,6 @@ STBIWDEF void stbi_flip_vertically_on_write(int flip_boolean);
    #endif
 #endif
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <assert.h>
 
 #define STBIW_MALLOC(sz)        malloc(sz)
 #define STBIW_REALLOC(p,newsz)  realloc(p,newsz)
@@ -468,6 +469,8 @@ STBIWDEF int stbi_write_png_to_func(stbi_write_func *func, void *context, int x,
    STBIW_FREE(png);
    return 1;
 }
+
+} // namespace stb
 
 
 /* Revision history

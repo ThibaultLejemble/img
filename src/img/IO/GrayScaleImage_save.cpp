@@ -13,8 +13,8 @@ bool save(const std::string& filename, const GrayScaleImage& gray, bool flip)
         data[k] = 255 * gray.data()[k];
     }
 
-    stbi_flip_vertically_on_write(flip);
-    int ok = stbi_write_png(filename.c_str(), gray.width(), gray.height(), 1, data, 0);
+    stb::stbi_flip_vertically_on_write(flip);
+    int ok = stb::stbi_write_png(filename.c_str(), gray.width(), gray.height(), 1, data, 0);
 
     free(data);
 
