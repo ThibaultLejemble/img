@@ -1,5 +1,4 @@
 #include <img/Image/ImageT.h>
-//#include <img/IO/ImageT.h>
 
 #include <iostream>
 

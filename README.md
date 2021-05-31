@@ -25,8 +25,6 @@ make -j
 ``` 
 
 # TODO (generic ImageT)
-- bitmap io
-- png io
 - Eigen on/off
 - bool support
 - as_matrix/as_tensor
