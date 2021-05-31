@@ -534,18 +534,6 @@ static void stbi__vertical_flip(void *image, int w, int h, int bytes_per_pixel)
    }
 }
 
-//static void stbi__vertical_flip_slices(void *image, int w, int h, int z, int bytes_per_pixel)
-//{
-//   int slice;
-//   int slice_size = w * h * bytes_per_pixel;
-
-//   stbi_uc *bytes = (stbi_uc *)image;
-//   for (slice = 0; slice < z; ++slice) {
-//      stbi__vertical_flip(bytes, w, h, bytes_per_pixel);
-//      bytes += slice_size;
-//   }
-//}
-
 static unsigned char *stbi__load_and_postprocess_8bit(stbi__context *s, int *x, int *y, int *comp, int req_comp)
 {
    stbi__result_info ri;
