@@ -1,5 +1,4 @@
-/* stb_image_write - v1.09 - public domain - http://nothings.org/stb/stb_image_write.h
-*/
+/* stb_image_write - v1.09 - public domain - http://nothings.org/stb/stb_image_write.h */
 
 #pragma once
 
@@ -471,47 +470,3 @@ STBIWDEF int stbi_write_png_to_func(stbi_write_func *func, void *context, int x,
 }
 
 } // namespace stb
-
-
-/* Revision history
-      1.09  (2018-02-11)
-             fix typo in zlib quality API, improve STB_I_W_STATIC in C++
-      1.08  (2018-01-29)
-             add stbi__flip_vertically_on_write, external zlib, zlib quality, choose PNG filter
-      1.07  (2017-07-24)
-             doc fix
-      1.06 (2017-07-23)
-             writing JPEG (using Jon Olick's code)
-      1.05   ???
-      1.04 (2017-03-03)
-             monochrome BMP expansion
-      1.03   ???
-      1.02 (2016-04-02)
-             avoid allocating large structures on the stack
-      1.01 (2016-01-16)
-             STBIW_REALLOC_SIZED: support allocators with no realloc support
-             avoid race-condition in crc initialization
-             minor compile issues
-      1.00 (2015-09-14)
-             installable file IO function
-      0.99 (2015-09-13)
-             warning fixes; TGA rle support
-      0.98 (2015-04-08)
-             added STBIW_MALLOC, STBIW_ASSERT etc
-      0.97 (2015-01-18)
-             fixed HDR asserts, rewrote HDR rle logic
-      0.96 (2015-01-17)
-             add HDR output
-             fix monochrome BMP
-      0.95 (2014-08-17)
-		       add monochrome TGA output
-      0.94 (2014-05-31)
-             rename private functions to avoid conflicts with stb_image.h
-      0.93 (2014-05-27)
-             warning fixes
-      0.92 (2010-08-01)
-             casts to unsigned char to fix warnings
-      0.91 (2010-07-17)
-             first public release
-      0.90   first internal release
-*/
