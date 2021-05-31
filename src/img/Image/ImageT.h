@@ -617,13 +617,17 @@ typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::eval(float u, float v) const
 template<typename T, int C>
 typename ImageT<T,C>::ConstMatrixMap ImageT<T,C>::as_matrix() const
 {
-    std::abort(); //TODO
+    static_assert(C == 1, "ImageT<T,C>::as_matrix() is valid only for "
+                          "single-channel image (C=1).");
+    return ConstMatrixMap(m_data.data(), height(), width());
 }
 
 template<typename T, int C>
 typename ImageT<T,C>::MatrixMap ImageT<T,C>::as_matrix()
 {
-    std::abort(); //TODO
+    static_assert(C == 1, "ImageT<T,C>::as_matrix() is valid only for "
+                          "single-channel image (C=1).");
+    return MatrixMap(m_data.data(), height(), width());
 }
 
 // Modifiers -------------------------------------------------------------------
