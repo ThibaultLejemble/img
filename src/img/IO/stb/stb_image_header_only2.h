@@ -235,13 +235,13 @@ static int stbi__sse2_available(void)
 #else // assume GCC-style if not VC++
 #define STBI_SIMD_ALIGN(type, name) type name __attribute__((aligned(16)))
 
-static int stbi__sse2_available(void)
-{
-   // If we're even attempting to compile this on GCC/Clang, that means
-   // -msse2 is on, which means the compiler is allowed to use SSE2
-   // instructions at will, and so are we.
-   return 1;
-}
+//static int stbi__sse2_available(void)
+//{
+//   // If we're even attempting to compile this on GCC/Clang, that means
+//   // -msse2 is on, which means the compiler is allowed to use SSE2
+//   // instructions at will, and so are we.
+//   return 1;
+//}
 #endif
 #endif
 
@@ -466,7 +466,7 @@ STBIDEF void stbi_set_flip_vertically_on_load(int flag_true_if_should_flip)
     stbi__vertically_flip_on_load = flag_true_if_should_flip;
 }
 
-static void *stbi__load_main(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri, int bpc)
+static void *stbi__load_main(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri, int /*bpc*/)
 {
    memset(ri, 0, sizeof(*ri)); // make sure it's initialized if we add new fields
    ri->bits_per_channel = 8; // default is 8 so most paths don't have to be changed
@@ -534,17 +534,17 @@ static void stbi__vertical_flip(void *image, int w, int h, int bytes_per_pixel)
    }
 }
 
-static void stbi__vertical_flip_slices(void *image, int w, int h, int z, int bytes_per_pixel)
-{
-   int slice;
-   int slice_size = w * h * bytes_per_pixel;
+//static void stbi__vertical_flip_slices(void *image, int w, int h, int z, int bytes_per_pixel)
+//{
+//   int slice;
+//   int slice_size = w * h * bytes_per_pixel;
 
-   stbi_uc *bytes = (stbi_uc *)image;
-   for (slice = 0; slice < z; ++slice) {
-      stbi__vertical_flip(bytes, w, h, bytes_per_pixel); 
-      bytes += slice_size; 
-   }
-}
+//   stbi_uc *bytes = (stbi_uc *)image;
+//   for (slice = 0; slice < z; ++slice) {
+//      stbi__vertical_flip(bytes, w, h, bytes_per_pixel);
+//      bytes += slice_size;
+//   }
+//}
 
 static unsigned char *stbi__load_and_postprocess_8bit(stbi__context *s, int *x, int *y, int *comp, int req_comp)
 {
