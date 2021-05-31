@@ -2,15 +2,6 @@
 
 #pragma once
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <assert.h>
-
-#define STBIWDEF  inline // extern "C"
-
 namespace stb {
 
 inline static int stbi_write_png_compression_level = 8;

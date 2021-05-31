@@ -2,15 +2,6 @@
 
 #pragma once
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <stddef.h> // ptrdiff_t on osx
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-#include <stdio.h>
-#include <assert.h>
-
 namespace stb {
 
 enum
@@ -24,8 +15,6 @@ enum
 
 typedef unsigned char stbi_uc;
 typedef unsigned short stbi_us;
-
-#define STBIDEF inline
 
 typedef struct
 {
