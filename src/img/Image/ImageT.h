@@ -123,6 +123,7 @@ public:
     inline       T* raw();
 
     inline ConstColorAccess eval(float u, float v) const;
+    inline      ColorAccess eval(float u, float v);
 
     inline ConstMatrixMap as_matrix() const;
     inline      MatrixMap as_matrix();
@@ -608,6 +609,14 @@ T* ImageT<T,C>::raw()
 
 template<typename T, int C>
 typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::eval(float u, float v) const
+{
+    const int i = std::floor(u * (m_height-1));
+    const int j = std::floor(v * (m_width-1));
+    return this->operator()(i,j);
+}
+
+template<typename T, int C>
+typename ImageT<T,C>::ColorAccess ImageT<T,C>::eval(float u, float v)
 {
     const int i = std::floor(u * (m_height-1));
     const int j = std::floor(v * (m_width-1));
