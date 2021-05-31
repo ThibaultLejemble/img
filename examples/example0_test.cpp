@@ -1,5 +1,5 @@
 #include <img/Image/ImageT.h>
-#include <img/IO/ImageT.h>
+//#include <img/IO/ImageT.h>
 
 #include <iostream>
 
@@ -26,32 +26,32 @@ int main()
         }
     }
 
-    io::save("exmaple0_Gi.png",    ImageGi   (image));
-    io::save("exmaple0_Gf.png",    ImageGf   (image));
-    io::save("exmaple0_Gd.png",    ImageGd   (image));
-    io::save("exmaple0_GAi.png",   ImageGAi  (image));
-    io::save("exmaple0_GAf.png",   ImageGAf  (image));
-    io::save("exmaple0_GAd.png",   ImageGAd  (image));
-    io::save("exmaple0_RGBi.png",  ImageRGBi (image));
-    io::save("exmaple0_RGBf.png",  ImageRGBf (image));
-    io::save("exmaple0_RGBd.png",  ImageRGBd (image));
-    io::save("exmaple0_RGBAi.png", ImageRGBAi(image));
-    io::save("exmaple0_RGBAf.png", ImageRGBAf(image));
-    io::save("exmaple0_RGBAd.png", ImageRGBAd(image));
+    save("exmaple0_Gi.png",    ImageGi   (image));
+    save("exmaple0_Gf.png",    ImageGf   (image));
+    save("exmaple0_Gd.png",    ImageGd   (image));
+    save("exmaple0_GAi.png",   ImageGAi  (image));
+    save("exmaple0_GAf.png",   ImageGAf  (image));
+    save("exmaple0_GAd.png",   ImageGAd  (image));
+    save("exmaple0_RGBi.png",  ImageRGBi (image));
+    save("exmaple0_RGBf.png",  ImageRGBf (image));
+    save("exmaple0_RGBd.png",  ImageRGBd (image));
+    save("exmaple0_RGBAi.png", ImageRGBAi(image));
+    save("exmaple0_RGBAf.png", ImageRGBAf(image));
+    save("exmaple0_RGBAd.png", ImageRGBAd(image));
 
     {
-        {ImageGi    image2; io::load("exmaple0_Gi.png",    image2); io::save("exmaple0_Gi2.png",    image2);}
-        {ImageGf    image2; io::load("exmaple0_Gf.png",    image2); io::save("exmaple0_Gf2.png",    image2);}
-        {ImageGd    image2; io::load("exmaple0_Gd.png",    image2); io::save("exmaple0_Gd2.png",    image2);}
-        {ImageGAi   image2; io::load("exmaple0_GAi.png",   image2); io::save("exmaple0_GAi2.png",   image2);}
-        {ImageGAf   image2; io::load("exmaple0_GAf.png",   image2); io::save("exmaple0_GAf2.png",   image2);}
-        {ImageGAd   image2; io::load("exmaple0_GAd.png",   image2); io::save("exmaple0_GAd2.png",   image2);}
-        {ImageRGBi  image2; io::load("exmaple0_RGBi.png",  image2); io::save("exmaple0_RGBi2.png",  image2);}
-        {ImageRGBf  image2; io::load("exmaple0_RGBf.png",  image2); io::save("exmaple0_RGBf2.png",  image2);}
-        {ImageRGBd  image2; io::load("exmaple0_RGBd.png",  image2); io::save("exmaple0_RGBd2.png",  image2);}
-        {ImageRGBAi image2; io::load("exmaple0_RGBAi.png", image2); io::save("exmaple0_RGBAi2.png", image2);}
-        {ImageRGBAf image2; io::load("exmaple0_RGBAf.png", image2); io::save("exmaple0_RGBAf2.png", image2);}
-        {ImageRGBAd image2; io::load("exmaple0_RGBAd.png", image2); io::save("exmaple0_RGBAd2.png", image2);}
+        {ImageGi    image2; load("exmaple0_Gi.png",    image2); save("exmaple0_Gi2.png",    image2);}
+        {ImageGf    image2; load("exmaple0_Gf.png",    image2); save("exmaple0_Gf2.png",    image2);}
+        {ImageGd    image2; load("exmaple0_Gd.png",    image2); save("exmaple0_Gd2.png",    image2);}
+        {ImageGAi   image2; load("exmaple0_GAi.png",   image2); save("exmaple0_GAi2.png",   image2);}
+        {ImageGAf   image2; load("exmaple0_GAf.png",   image2); save("exmaple0_GAf2.png",   image2);}
+        {ImageGAd   image2; load("exmaple0_GAd.png",   image2); save("exmaple0_GAd2.png",   image2);}
+        {ImageRGBi  image2; load("exmaple0_RGBi.png",  image2); save("exmaple0_RGBi2.png",  image2);}
+        {ImageRGBf  image2; load("exmaple0_RGBf.png",  image2); save("exmaple0_RGBf2.png",  image2);}
+        {ImageRGBd  image2; load("exmaple0_RGBd.png",  image2); save("exmaple0_RGBd2.png",  image2);}
+        {ImageRGBAi image2; load("exmaple0_RGBAi.png", image2); save("exmaple0_RGBAi2.png", image2);}
+        {ImageRGBAf image2; load("exmaple0_RGBAf.png", image2); save("exmaple0_RGBAf2.png", image2);}
+        {ImageRGBAd image2; load("exmaple0_RGBAd.png", image2); save("exmaple0_RGBAd2.png", image2);}
     }
 
 
