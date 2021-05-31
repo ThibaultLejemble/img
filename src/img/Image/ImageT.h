@@ -691,7 +691,8 @@ T* ImageT<T,C>::at(int k)
 template<typename T, int C>
 int ImageT<T,C>::index(int i, int j) const
 {
-    return C * (i * width() + j);
+    // column major
+    return C * (i + j * height());
 }
 
 } // namespace img
