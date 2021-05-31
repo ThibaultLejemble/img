@@ -1,7 +1,4 @@
-#include <img/Image/Image.h>
-#include <img/Image/BinaryImage.h>
-#include <img/Operations/Convert.h>
-#include <img/IO/ImageIO.h>
+#include <img/Image/ImageT.h>
 
 #include <iostream>
 
@@ -9,23 +6,26 @@ using namespace img;
 
 int main()
 {
-    Image rgb;
-    bool ok = load("example1_fractal.png", rgb);
+    ImageRGBf rgb;
+    const auto ok = load("example1_fractal.png", rgb);
     if(!ok)
     {
         std::cout << "Failed to load image 'example1_fractal.png'" << std::endl;
         return 1;
     }
 
-    BinaryImage binary;
+    // rgb to gray scale
+    const auto gray = ImageGf(rgb);
 
-    // RGB to binary
-    convert(rgb, binary);
+    // binarize
+    ImageGf binary;
+    cast(gray, binary, [](auto c)
+    {
+        return ImageGf::Color(c[0] > 0.5);
+    });
 
-    // binary to RGB (black and white)
-    convert(binary, rgb);
+    save("example2_gray.png",   gray);
+    save("example2_binary.png", binary);
 
-    ok = save("example2_binary.png", rgb);
-
-    return !ok;
+    return 0;
 }
