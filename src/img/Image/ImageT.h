@@ -93,12 +93,6 @@ public:
     template<typename T2, int C2>
     inline ImageT<T2,C2> cast() const;
 
-    template<typename T2>
-    inline ImageT<T2,C> cast() const;
-
-    template<int C2>
-    inline ImageT<T,C2> cast() const;
-
     // Capacity ----------------------------------------------------------------
 public:
     inline bool empty();
@@ -503,20 +497,6 @@ template<typename T2, int C2>
 ImageT<T2,C2> ImageT<T,C>::cast() const
 {
     return ImageT<T2,C2>(*this);
-}
-
-template<typename T, int C>
-template<typename T2>
-ImageT<T2,C> ImageT<T,C>::cast() const
-{
-    return ImageT<T2,C>(*this);
-}
-
-template<typename T, int C>
-template<int C2>
-ImageT<T,C2> ImageT<T,C>::cast() const
-{
-    return ImageT<T,C2>(*this);
 }
 
 // Capacity --------------------------------------------------------------------
