@@ -63,7 +63,7 @@ public:
     using Color            = Eigen::Matrix<T, C, 1>;
     using ColorAccess      = Eigen::Map<Color>;
     using ConstColorAccess = Eigen::Map<const Color>;
-    using Matrix           = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
+    using Matrix           = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
     using MatrixMap        = Eigen::Map<Matrix>;
     using ConstMatrixMap   = Eigen::Map<const Matrix>;
 
@@ -704,8 +704,8 @@ T* ImageT<T,C>::at(int k)
 template<typename T, int C>
 int ImageT<T,C>::index(int i, int j) const
 {
-    // column major
-    return C * (i + j * height());
+//    return C * (i + j * height()); // column major
+    return C * (i * width() + j); // row major
 }
 
 } // namespace img
