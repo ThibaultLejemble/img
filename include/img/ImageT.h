@@ -205,8 +205,10 @@ public:
     inline Color<T,C>  operator * (const T& value) const;
     inline Color<T,C>& operator /=(const T& value);
     inline Color<T,C>  operator / (const T& value) const;
-//    inline friend Color<T,C> operator *(T value, const Color<T,C>& color);
-//    inline friend Color<T,C> operator /(T value, const Color<T,C>& color);
+    template<typename T2, int C2>
+    inline friend Color<T2,C2> operator *(T2 value, const Color<T2,C2>& color);
+    template<typename T2, int C2>
+    inline friend Color<T2,C2> operator /(T2 value, const Color<T2,C2>& color);
     inline T  operator [] (int i) const;
     inline T& operator [] (int i);
 
