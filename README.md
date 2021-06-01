@@ -8,7 +8,7 @@ The [Image](https://github.com/ThibaultLejemble/img/blob/main/include/img/Image.
 - the top-left pixel is at coordinates `(0,0)`
 - the storage is in **row-major** order
 - pixel access is made through an `Eigen::Map`
-- images can be loaded from and saved to `png` files only (thanks to [stb][https://github.com/nothings/stb])
+- images can be loaded from and saved to `png` files only (thanks to [stb](https://github.com/nothings/stb))
 - resizing operations are not conservative
 - macro `IMG_NO_EIGEN` can be defined to avoid using Eigen
 - color values are internally stored inside a `std::vector`
