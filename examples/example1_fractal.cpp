@@ -1,4 +1,4 @@
-#include <img/ImageT.h>
+#include <img/Image.h>
 
 using namespace img;
 
