@@ -195,13 +195,20 @@ public:
     inline Color(T r, T g, T b);
     inline Color(T r, T g, T b, T a);
 
+    inline Color<T,C>  operator - () const;
+    inline Color<T,C>& operator + () const;
     inline Color<T,C>& operator +=(const Color<T,C>& color);
     inline Color<T,C>  operator + (const Color<T,C>& color) const;
+    inline Color<T,C>& operator -=(const Color<T,C>& color);
+    inline Color<T,C>  operator - (const Color<T,C>& color) const;
     inline Color<T,C>& operator *=(const T& value);
     inline Color<T,C>  operator * (const T& value) const;
+    inline Color<T,C>& operator /=(const T& value);
+    inline Color<T,C>  operator / (const T& value) const;
+//    inline friend Color<T,C> operator *(T value, const Color<T,C>& color);
+//    inline friend Color<T,C> operator /(T value, const Color<T,C>& color);
     inline T  operator [] (int i) const;
     inline T& operator [] (int i);
-//    inline friend Color<T,C> operator *(T value, const Color<T,C>& color);
 
 protected:
     std::array<T,C> m_data;
@@ -843,6 +850,20 @@ Color<T,C>::Color(T r, T g, T b, T a)
 }
 
 template<typename T, int C>
+Color<T,C> Color<T,C>::operator - () const
+{
+    Color<T,C> new_color(*this);
+    new_color *= T(-1);
+    return new_color;
+}
+
+template<typename T, int C>
+Color<T,C>& Color<T,C>::operator + () const
+{
+    return *this;
+}
+
+template<typename T, int C>
 Color<T,C>& Color<T,C>::operator +=(const Color<T,C>& color)
 {
     for(int i = 0; i < C; ++i)
@@ -855,9 +876,26 @@ Color<T,C>& Color<T,C>::operator +=(const Color<T,C>& color)
 template<typename T, int C>
 Color<T,C> Color<T,C>::operator + (const Color<T,C>& color) const
 {
-    Color<T,C> new_color;
-    new_color += *this;
+    Color<T,C> new_color(*this);
     new_color += color;
+    return new_color;
+}
+
+template<typename T, int C>
+Color<T,C>& Color<T,C>::operator -=(const Color<T,C>& color)
+{
+    for(int i = 0; i < C; ++i)
+    {
+        m_data[i] -= color[i];
+    }
+    return *this;
+}
+
+template<typename T, int C>
+Color<T,C> Color<T,C>::operator - (const Color<T,C>& color) const
+{
+    Color<T,C> new_color(*this);
+    new_color -= color;
     return new_color;
 }
 
@@ -880,10 +918,36 @@ Color<T,C> Color<T,C>::operator * (const T& value) const
 }
 
 template<typename T, int C>
+Color<T,C>& Color<T,C>::operator /=(const T& value)
+{
+    for(int i = 0; i < C; ++i)
+    {
+        m_data[i] /= value;
+    }
+    return *this;
+}
+
+template<typename T, int C>
+Color<T,C> Color<T,C>::operator / (const T& value) const
+{
+    Color<T,C> new_color(*this);
+    new_color /= value;
+    return new_color;
+}
+
+template<typename T, int C>
 inline Color<T,C> operator *(T value, const Color<T,C>& color)
 {
   Color<T,C> new_color(color);
   new_color *= value;
+  return new_color;
+}
+
+template<typename T, int C>
+inline Color<T,C> operator /(T value, const Color<T,C>& color)
+{
+  Color<T,C> new_color(color);
+  new_color /= value;
   return new_color;
 }
 
