@@ -1,7 +1,5 @@
 #pragma once
 
-#define IMG_NO_EIGEN
-
 #ifndef IMG_NO_EIGEN
 #include <Eigen/Core>
 #else
@@ -245,18 +243,21 @@ template<typename T, int C>
 class Matrix
 {
 public:
+    //TODO
 };
 
 template<typename T, int C>
 class MatrixMap
 {
 public:
+    //TODO
 };
 
 template<typename T, int C>
 class ConstMatrixMap
 {
 public:
+    //TODO
 };
 
 } // namespace details
