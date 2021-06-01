@@ -25,9 +25,9 @@ make -j
 ``` 
 
 # TODO (generic ImageT)
-- Eigen on/off macro
+- no Eigen matrix
 - bool specialization
-- as_tensor()
+- Eigen as_tensor()
 - eval nearest/linear
 - colormap
 - cuda ?
