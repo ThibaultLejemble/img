@@ -1,7 +1,11 @@
 #pragma once
 
+#define IMG_NO_EIGEN
+
 #ifndef IMG_NO_EIGEN
 #include <Eigen/Core>
+#else
+#include <array>
 #endif
 
 #include <vector>
@@ -175,6 +179,78 @@ protected:
     int            m_width;
     std::vector<T> m_data;
 };
+
+// details ---------------------------------------------------------------------
+
+#ifdef IMG_NO_EIGEN
+namespace details {
+
+template<typename T, int C>
+class Color
+{
+public:
+    inline Color() = default;
+    inline explicit Color(T g);
+    inline Color(T g, T a);
+    inline Color(T r, T g, T b);
+    inline Color(T r, T g, T b, T a);
+
+    inline Color<T,C>& operator +=(const Color<T,C>& color);
+    inline Color<T,C> operator +(const Color<T,C>& color) const;
+    inline Color<T,C> operator *(T value) const;
+    inline T  operator [] (int i) const;
+    inline T& operator [] (int i);
+//    inline friend Color<T,C> operator *(T value, const Color<T,C>& color);
+
+protected:
+    std::array<T,C> m_data;
+};
+
+template<typename T, int C>
+class ColorAccess
+{
+public:
+    inline ColorAccess(T* pixel);
+
+    inline ColorAccess& operator = (const Color<T,C>& color);
+    inline T  operator [] (int i) const;
+    inline T& operator [] (int i);
+
+protected:
+    T* m_data;
+};
+
+template<typename T, int C>
+class ConstColorAccess
+{
+public:
+  inline ConstColorAccess(const T* pixel);
+  inline T  operator [] (int i) const;
+
+protected:
+    const T* m_data;
+};
+
+template<typename T, int C>
+class Matrix
+{
+public:
+};
+
+template<typename T, int C>
+class MatrixMap
+{
+public:
+};
+
+template<typename T, int C>
+class ConstMatrixMap
+{
+public:
+};
+
+} // namespace details
+#endif
 
 } // namespace img
 
@@ -727,6 +803,127 @@ int ImageT<T,C>::index(int i, int j) const
 //    return C * (i + j * height()); // column major
     return C * (i * width() + j); // row major
 }
+
+#ifdef IMG_NO_EIGEN
+namespace details {
+
+template<typename T, int C>
+Color<T,C>::Color(T g)
+{
+    static_assert(C == 1);
+    m_data[0] = g;
+}
+
+template<typename T, int C>
+Color<T,C>::Color(T g, T a)
+{
+    static_assert(C == 2);
+    m_data[0] = g;
+    m_data[1] = a;
+}
+
+template<typename T, int C>
+Color<T,C>::Color(T r, T g, T b)
+{
+    static_assert(C == 3);
+    m_data[0] = r;
+    m_data[1] = g;
+    m_data[2] = b;
+}
+
+template<typename T, int C>
+Color<T,C>::Color(T r, T g, T b, T a)
+{
+    static_assert(C == 4);
+    m_data[0] = r;
+    m_data[1] = g;
+    m_data[2] = b;
+    m_data[3] = a;
+}
+
+template<typename T, int C>
+Color<T,C>& Color<T,C>::operator +=(const Color<T,C>& color)
+{
+    for(int i = 0; i < C; ++i)
+    {
+        m_data[i] += color[i];
+    }
+    return *this;
+}
+
+template<typename T, int C>
+Color<T,C> Color<T,C>::operator +(const Color<T,C>& color) const
+{
+    Color<T,C> new_color;
+    new_color += *this;
+    new_color += color;
+    return new_color;
+}
+
+template<typename T, int C>
+Color<T,C> Color<T,C>::operator *(T value) const
+{
+    Color<T,C> new_color(*this);
+    new_color *= value;
+    return new_color;
+}
+
+template<typename T, int C>
+inline Color<T,C> operator *(T value, const Color<T,C>& color)
+{
+  Color<T,C> new_color(color);
+  new_color *= value;
+  return new_color;
+}
+
+template<typename T, int C>
+T Color<T,C>::operator [] (int i) const
+{
+    return m_data[i];
+}
+
+template<typename T, int C>
+T& Color<T,C>::operator [] (int i)
+{
+    return m_data[i];
+}
+
+template<typename T, int C>
+ColorAccess<T,C>::ColorAccess(T* pixel) : m_data(pixel)
+{
+}
+
+template<typename T, int C>
+ColorAccess<T,C>& ColorAccess<T,C>::operator = (const Color<T,C>& color)
+{
+    //TODO______________________________________________________________________
+}
+
+template<typename T, int C>
+T ColorAccess<T,C>::operator [] (int i) const
+{
+
+}
+
+template<typename T, int C>
+T& ColorAccess<T,C>::operator [] (int i)
+{
+
+}
+
+template<typename T, int C>
+ConstColorAccess<T,C>::ConstColorAccess(const T* pixel) : m_data(pixel)
+{
+}
+
+template<typename T, int C>
+T ConstColorAccess<T,C>::operator [] (int i) const
+{
+
+}
+
+} // namespace details
+#endif
 
 } // namespace img
 
