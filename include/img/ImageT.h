@@ -196,8 +196,9 @@ public:
     inline Color(T r, T g, T b, T a);
 
     inline Color<T,C>& operator +=(const Color<T,C>& color);
-    inline Color<T,C> operator +(const Color<T,C>& color) const;
-    inline Color<T,C> operator *(T value) const;
+    inline Color<T,C>  operator + (const Color<T,C>& color) const;
+    inline Color<T,C>& operator *=(const T& value);
+    inline Color<T,C>  operator * (const T& value) const;
     inline T  operator [] (int i) const;
     inline T& operator [] (int i);
 //    inline friend Color<T,C> operator *(T value, const Color<T,C>& color);
@@ -852,7 +853,7 @@ Color<T,C>& Color<T,C>::operator +=(const Color<T,C>& color)
 }
 
 template<typename T, int C>
-Color<T,C> Color<T,C>::operator +(const Color<T,C>& color) const
+Color<T,C> Color<T,C>::operator + (const Color<T,C>& color) const
 {
     Color<T,C> new_color;
     new_color += *this;
@@ -861,7 +862,17 @@ Color<T,C> Color<T,C>::operator +(const Color<T,C>& color) const
 }
 
 template<typename T, int C>
-Color<T,C> Color<T,C>::operator *(T value) const
+Color<T,C>& Color<T,C>::operator *=(const T& value)
+{
+    for(int i = 0; i < C; ++i)
+    {
+        m_data[i] *= value;
+    }
+    return *this;
+}
+
+template<typename T, int C>
+Color<T,C> Color<T,C>::operator * (const T& value) const
 {
     Color<T,C> new_color(*this);
     new_color *= value;
@@ -896,19 +907,23 @@ ColorAccess<T,C>::ColorAccess(T* pixel) : m_data(pixel)
 template<typename T, int C>
 ColorAccess<T,C>& ColorAccess<T,C>::operator = (const Color<T,C>& color)
 {
-    //TODO______________________________________________________________________
+    for(int i = 0; i < C; ++i)
+    {
+        m_data[i] += color[i];
+    }
+    return *this;
 }
 
 template<typename T, int C>
 T ColorAccess<T,C>::operator [] (int i) const
 {
-
+    return m_data[i];
 }
 
 template<typename T, int C>
 T& ColorAccess<T,C>::operator [] (int i)
 {
-
+    return m_data[i];
 }
 
 template<typename T, int C>
@@ -919,7 +934,7 @@ ConstColorAccess<T,C>::ConstColorAccess(const T* pixel) : m_data(pixel)
 template<typename T, int C>
 T ConstColorAccess<T,C>::operator [] (int i) const
 {
-
+    return m_data[i];
 }
 
 } // namespace details
