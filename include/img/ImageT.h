@@ -22,39 +22,39 @@
 namespace img {
 
 template<typename T = float, int C = 4>
-class ImageT;
+class Image;
 
-using ImageGi    = ImageT<int,   1>;
-using ImageGf    = ImageT<float, 1>;
-using ImageGd    = ImageT<double,1>;
-using ImageGAi   = ImageT<int,   2>;
-using ImageGAf   = ImageT<float, 2>;
-using ImageGAd   = ImageT<double,2>;
-using ImageRGBi  = ImageT<int,   3>;
-using ImageRGBf  = ImageT<float, 3>;
-using ImageRGBd  = ImageT<double,3>;
-using ImageRGBAi = ImageT<int,   4>;
-using ImageRGBAf = ImageT<float, 4>;
-using ImageRGBAd = ImageT<double,4>;
+using ImageGi    = Image<int,   1>;
+using ImageGf    = Image<float, 1>;
+using ImageGd    = Image<double,1>;
+using ImageGAi   = Image<int,   2>;
+using ImageGAf   = Image<float, 2>;
+using ImageGAd   = Image<double,2>;
+using ImageRGBi  = Image<int,   3>;
+using ImageRGBf  = Image<float, 3>;
+using ImageRGBd  = Image<double,3>;
+using ImageRGBAi = Image<int,   4>;
+using ImageRGBAf = Image<float, 4>;
+using ImageRGBAd = Image<double,4>;
 
 // cast ------------------------------------------------------------------------
 
 template<typename TFrom, int CFrom, typename TTo, int CTo, class Caster>
-inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caster);
+inline void cast(const Image<TFrom, CFrom>& from, Image<TTo, CTo>& to, Caster&& caster);
 
 template<typename TFrom, int CFrom, typename TTo, int CTo>
-inline void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to);
+inline void cast(const Image<TFrom, CFrom>& from, Image<TTo, CTo>& to);
 
 // io --------------------------------------------------------------------------
 
 template<typename T, int C>
 inline bool load(const std::string& filename,
-                 ImageT<T,C>& image,
+                 Image<T,C>& image,
                  bool flip = false);
 
 template<typename T, int C>
 inline bool save(const std::string& filename,
-                 const ImageT<T,C>& image,
+                 const Image<T,C>& image,
                  bool flip = false);
 
 // details ---------------------------------------------------------------------
@@ -73,7 +73,7 @@ template<typename T, int C> class ConstMatrixMap;
 // -----------------------------------------------------------------------------
 
 template<typename T, int C>
-class ImageT
+class Image
 {
     // Types -------------------------------------------------------------------
 public:
@@ -96,29 +96,29 @@ public:
 
     // Image -------------------------------------------------------------------
 public:
-    inline ImageT();
-    inline ImageT(int height, int width);
-    inline ImageT(int height, int width, unsigned char* data);
-    inline ImageT(int height, int width, unsigned char* data, int depth);
-    inline ImageT(const ImageT&) = default;
-    inline ImageT(ImageT&&) = default;
+    inline Image();
+    inline Image(int height, int width);
+    inline Image(int height, int width, unsigned char* data);
+    inline Image(int height, int width, unsigned char* data, int depth);
+    inline Image(const Image&) = default;
+    inline Image(Image&&) = default;
 
-    inline ImageT& operator=(const ImageT&) = default;
-    inline ImageT& operator=(ImageT&&) = default;
-
-    template<typename T2, int C2>
-    inline explicit ImageT(const ImageT<T2,C2>& other);
+    inline Image& operator=(const Image&) = default;
+    inline Image& operator=(Image&&) = default;
 
     template<typename T2, int C2>
-    inline ImageT& operator=(const ImageT<T2,C2>& other);
+    inline explicit Image(const Image<T2,C2>& other);
+
+    template<typename T2, int C2>
+    inline Image& operator=(const Image<T2,C2>& other);
 
     // Cast --------------------------------------------------------------------
 public:
-    template<class ImageT2>
-    inline ImageT2 cast() const;
+    template<class Image2>
+    inline Image2 cast() const;
 
     template<typename T2, int C2>
-    inline ImageT<T2,C2> cast() const;
+    inline Image<T2,C2> cast() const;
 
     // Capacity ----------------------------------------------------------------
 public:
@@ -317,37 +317,37 @@ template<> struct Average<int,int> {
 
 template<typename TFrom, int CFrom, typename TTo, int CTo>
 struct DefaultCaster {
-    typename ImageT<TTo,CTo>::Color operator()(
-      const typename ImageT<TFrom,CFrom>::ConstColorAccess& c);
+    typename Image<TTo,CTo>::Color operator()(
+      const typename Image<TFrom,CFrom>::ConstColorAccess& c);
 };
 
 //! \brief RGBA to G
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,1> {
-    auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
-        return typename ImageT<TTo,1>::Color(
+    auto operator()(const typename Image<TFrom,4>::ConstColorAccess& c) {
+        return typename Image<TTo,1>::Color(
               Average<TFrom,TTo>::compute(c[0],c[1],c[2]));
     }
 };
 
 //! \brief RGB to G
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,1> {
-    auto operator()(const typename ImageT<TFrom,3>::ConstColorAccess& c) {
-        return typename ImageT<TTo,1>::Color(
+    auto operator()(const typename Image<TFrom,3>::ConstColorAccess& c) {
+        return typename Image<TTo,1>::Color(
               Average<TFrom,TTo>::compute(c[0],c[1],c[2]));
     }
 };
 
 //! \brief GA to G
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,1> {
-    auto operator()(const typename ImageT<TFrom,2>::ConstColorAccess& c) {
-        return typename ImageT<TTo,1>::Color(cast_channel<TFrom,TTo>(c[0]));
+    auto operator()(const typename Image<TFrom,2>::ConstColorAccess& c) {
+        return typename Image<TTo,1>::Color(cast_channel<TFrom,TTo>(c[0]));
     }
 };
 
 //! \brief RGBA to GA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,2> {
-    auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
-        return typename ImageT<TTo,2>::Color(
+    auto operator()(const typename Image<TFrom,4>::ConstColorAccess& c) {
+        return typename Image<TTo,2>::Color(
               Average<TFrom,TTo>::compute(c[0],c[1],c[2]),
               cast_channel<TFrom,TTo>(c[3]));
     }
@@ -355,24 +355,24 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,2> {
 
 //! \brief RGB to GA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,2> {
-    auto operator()(const typename ImageT<TFrom,3>::ConstColorAccess& c) {
-        return typename ImageT<TTo,2>::Color(
+    auto operator()(const typename Image<TFrom,3>::ConstColorAccess& c) {
+        return typename Image<TTo,2>::Color(
               Average<TFrom,TTo>::compute(c[0],c[1],c[2]), channel_one<TTo>());
     }
 };
 
 //! \brief G to GA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,2> {
-    auto operator()(const typename ImageT<TFrom,1>::ConstColorAccess& c) {
-        return typename ImageT<TTo,2>::Color(
+    auto operator()(const typename Image<TFrom,1>::ConstColorAccess& c) {
+        return typename Image<TTo,2>::Color(
               cast_channel<TFrom,TTo>(c[0]), channel_one<TTo>());
     }
 };
 
 //! \brief RGBA to RGB
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,3> {
-    auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
-        return typename ImageT<TTo,3>::Color(
+    auto operator()(const typename Image<TFrom,4>::ConstColorAccess& c) {
+        return typename Image<TTo,3>::Color(
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[1]),
               cast_channel<TFrom,TTo>(c[2]));
@@ -381,8 +381,8 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,3> {
 
 //! \brief GA to RGB
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,3> {
-    auto operator()(const typename ImageT<TFrom,2>::ConstColorAccess& c) {
-        return typename ImageT<TTo,3>::Color(
+    auto operator()(const typename Image<TFrom,2>::ConstColorAccess& c) {
+        return typename Image<TTo,3>::Color(
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[0]));
@@ -391,8 +391,8 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,3> {
 
 //! \brief G to RGB
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,3> {
-    auto operator()(const typename ImageT<TFrom,1>::ConstColorAccess& c) {
-      return typename ImageT<TTo,3>::Color(
+    auto operator()(const typename Image<TFrom,1>::ConstColorAccess& c) {
+      return typename Image<TTo,3>::Color(
             cast_channel<TFrom,TTo>(c[0]),
             cast_channel<TFrom,TTo>(c[0]),
             cast_channel<TFrom,TTo>(c[0]));
@@ -401,8 +401,8 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,3> {
 
 //! \brief RGB to RGBA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,4> {
-    auto operator()(const typename ImageT<TFrom,3>::ConstColorAccess& c) {
-        return typename ImageT<TTo,4>::Color(
+    auto operator()(const typename Image<TFrom,3>::ConstColorAccess& c) {
+        return typename Image<TTo,4>::Color(
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[1]),
               cast_channel<TFrom,TTo>(c[2]),
@@ -412,8 +412,8 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,4> {
 
 //! \brief GA to RGBA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,4> {
-    auto operator()(const typename ImageT<TFrom,2>::ConstColorAccess& c) {
-        return typename ImageT<TTo,4>::Color(
+    auto operator()(const typename Image<TFrom,2>::ConstColorAccess& c) {
+        return typename Image<TTo,4>::Color(
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[0]),
@@ -423,8 +423,8 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,4> {
 
 //! \brief G to RGBA
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,4> {
-    auto operator()(const typename ImageT<TFrom,1>::ConstColorAccess& c) {
-        return typename ImageT<TTo,4>::Color(
+    auto operator()(const typename Image<TFrom,1>::ConstColorAccess& c) {
+        return typename Image<TTo,4>::Color(
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[0]),
               cast_channel<TFrom,TTo>(c[0]),
@@ -433,26 +433,26 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,4> {
 };
 
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,1> {
-    auto operator()(const typename ImageT<TFrom,1>::ConstColorAccess& c) {
-        return typename ImageT<TTo,1>::Color(cast_channel<TFrom,TTo>(c[0]));
+    auto operator()(const typename Image<TFrom,1>::ConstColorAccess& c) {
+        return typename Image<TTo,1>::Color(cast_channel<TFrom,TTo>(c[0]));
     }
 };
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,2> {
-    auto operator()(const typename ImageT<TFrom,2>::ConstColorAccess& c) {
-        return typename ImageT<TTo,2>::Color(cast_channel<TFrom,TTo>(c[0]),
+    auto operator()(const typename Image<TFrom,2>::ConstColorAccess& c) {
+        return typename Image<TTo,2>::Color(cast_channel<TFrom,TTo>(c[0]),
                                              cast_channel<TFrom,TTo>(c[1]));
     }
 };
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,3> {
-    auto operator()(const typename ImageT<TFrom,3>::ConstColorAccess& c) {
-        return typename ImageT<TTo,3>::Color(cast_channel<TFrom,TTo>(c[0]),
+    auto operator()(const typename Image<TFrom,3>::ConstColorAccess& c) {
+        return typename Image<TTo,3>::Color(cast_channel<TFrom,TTo>(c[0]),
                                              cast_channel<TFrom,TTo>(c[1]),
                                              cast_channel<TFrom,TTo>(c[2]));
     }
 };
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,4> {
-    auto operator()(const typename ImageT<TFrom,4>::ConstColorAccess& c) {
-        return typename ImageT<TTo,4>::Color(cast_channel<TFrom,TTo>(c[0]),
+    auto operator()(const typename Image<TFrom,4>::ConstColorAccess& c) {
+        return typename Image<TTo,4>::Color(cast_channel<TFrom,TTo>(c[0]),
                                              cast_channel<TFrom,TTo>(c[1]),
                                              cast_channel<TFrom,TTo>(c[2]),
                                              cast_channel<TFrom,TTo>(c[3]));
@@ -464,7 +464,7 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,4> {
 // cast ------------------------------------------------------------------------
 
 template<typename TFrom, int CFrom, typename TTo, int CTo, class Caster>
-void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caster)
+void cast(const Image<TFrom, CFrom>& from, Image<TTo, CTo>& to, Caster&& caster)
 {
     to.resize(from.height(), from.width());
     //TODO omp ?
@@ -475,7 +475,7 @@ void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to, Caster&& caste
 }
 
 template<typename TFrom, int CFrom, typename TTo, int CTo>
-void cast(const ImageT<TFrom, CFrom>& from, ImageT<TTo, CTo>& to)
+void cast(const Image<TFrom, CFrom>& from, Image<TTo, CTo>& to)
 {
     cast(from, to, internal::DefaultCaster<TFrom, CFrom, TTo, CTo>());
 }
@@ -493,7 +493,7 @@ inline void stbi_image_free(void *retval_from_stbi_load);
 } // namespace stb
 
 template<typename T, int C>
-bool load(const std::string& filename, ImageT<T,C>& image, bool flip)
+bool load(const std::string& filename, Image<T,C>& image, bool flip)
 {
     image.clear();
 
@@ -510,7 +510,7 @@ bool load(const std::string& filename, ImageT<T,C>& image, bool flip)
 
     if(data == nullptr) return false;
 
-    image = ImageT<T,C>(height, width, data, channel);
+    image = Image<T,C>(height, width, data, channel);
 
     stb::stbi_image_free(data);
 
@@ -518,7 +518,7 @@ bool load(const std::string& filename, ImageT<T,C>& image, bool flip)
 }
 
 template<typename T, int C>
-bool save(const std::string& filename, const ImageT<T,C>& image, bool flip)
+bool save(const std::string& filename, const Image<T,C>& image, bool flip)
 {
     std::vector<char> data(image.capacity());
     for(int k = 0; k < image.capacity(); ++k)
@@ -539,12 +539,12 @@ bool save(const std::string& filename, const ImageT<T,C>& image, bool flip)
 // Image -----------------------------------------------------------------------
 
 template<typename T, int C>
-ImageT<T,C>::ImageT() : ImageT(0, 0)
+Image<T,C>::Image() : Image(0, 0)
 {
 }
 
 template<typename T, int C>
-ImageT<T,C>::ImageT(int height, int width) :
+Image<T,C>::Image(int height, int width) :
     m_height(height),
     m_width(width),
     m_data(C * width * height)
@@ -557,14 +557,14 @@ ImageT<T,C>::ImageT(int height, int width) :
 //! \todo could be optimized since cast is used
 //!
 template<typename T, int C>
-ImageT<T,C>::ImageT(int height, int width, unsigned char* data, int depth) : ImageT(height, width)
+Image<T,C>::Image(int height, int width, unsigned char* data, int depth) : Image(height, width)
 {
     assert(0 < depth && depth <= 4);
 
-         if(depth == 1) *this = ImageT<T,1>(height, width, data);
-    else if(depth == 2) *this = ImageT<T,2>(height, width, data);
-    else if(depth == 3) *this = ImageT<T,3>(height, width, data);
-    else if(depth == 4) *this = ImageT<T,4>(height, width, data);
+         if(depth == 1) *this = Image<T,1>(height, width, data);
+    else if(depth == 2) *this = Image<T,2>(height, width, data);
+    else if(depth == 3) *this = Image<T,3>(height, width, data);
+    else if(depth == 4) *this = Image<T,4>(height, width, data);
 }
 
 //!
@@ -572,7 +572,7 @@ ImageT<T,C>::ImageT(int height, int width, unsigned char* data, int depth) : Ima
 //! \warning data must point to an array of size height*size*C
 //!
 template<typename T, int C>
-ImageT<T,C>::ImageT(int height, int width, unsigned char* data) : ImageT(height, width)
+Image<T,C>::Image(int height, int width, unsigned char* data) : Image(height, width)
 {
     for(int k = 0; k < height * width * C; ++k)
     {
@@ -582,7 +582,7 @@ ImageT<T,C>::ImageT(int height, int width, unsigned char* data) : ImageT(height,
 
 template<typename T, int C>
 template<typename T2, int C2>
-ImageT<T,C>::ImageT(const ImageT<T2,C2>& other)  :
+Image<T,C>::Image(const Image<T2,C2>& other)  :
     m_height(other.height()),
     m_width(other.width()),
     m_data(C * other.width() * other.height())
@@ -592,7 +592,7 @@ ImageT<T,C>::ImageT(const ImageT<T2,C2>& other)  :
 
 template<typename T, int C>
 template<typename T2, int C2>
-ImageT<T,C>& ImageT<T,C>::operator=(const ImageT<T2,C2>& other)
+Image<T,C>& Image<T,C>::operator=(const Image<T2,C2>& other)
 {
     img::cast(other, *this);
     return *this;
@@ -601,65 +601,65 @@ ImageT<T,C>& ImageT<T,C>::operator=(const ImageT<T2,C2>& other)
 // Cast ------------------------------------------------------------------------
 
 template<typename T, int C>
-template<class ImageT2>
-ImageT2 ImageT<T,C>::cast() const
+template<class Image2>
+Image2 Image<T,C>::cast() const
 {
-    return ImageT2(*this);
+    return Image2(*this);
 }
 
 template<typename T, int C>
 template<typename T2, int C2>
-ImageT<T2,C2> ImageT<T,C>::cast() const
+Image<T2,C2> Image<T,C>::cast() const
 {
-    return ImageT<T2,C2>(*this);
+    return Image<T2,C2>(*this);
 }
 
 // Capacity --------------------------------------------------------------------
 
 template<typename T, int C>
-bool ImageT<T,C>::empty()
+bool Image<T,C>::empty()
 {
     return m_data.empty();
 }
 
 template<typename T, int C>
-int ImageT<T,C>::height() const
+int Image<T,C>::height() const
 {
     return m_height;
 }
 
 template<typename T, int C>
-int ImageT<T,C>::width() const
+int Image<T,C>::width() const
 {
     return m_width;
 }
 
 template<typename T, int C>
-constexpr int ImageT<T,C>::depth()
+constexpr int Image<T,C>::depth()
 {
     return C;
 }
 
 template<typename T, int C>
-int ImageT<T,C>::size() const
+int Image<T,C>::size() const
 {
     return m_height * m_width;
 }
 
 template<typename T, int C>
-int ImageT<T,C>::capacity() const
+int Image<T,C>::capacity() const
 {
     return m_height * m_width * C;
 }
 
 template<typename T, int C>
-int ImageT<T,C>::rows() const
+int Image<T,C>::rows() const
 {
     return m_height;
 }
 
 template<typename T, int C>
-int ImageT<T,C>::cols() const
+int Image<T,C>::cols() const
 {
     return m_width;
 }
@@ -667,55 +667,55 @@ int ImageT<T,C>::cols() const
 // Accessors -------------------------------------------------------------------
 
 template<typename T, int C>
-typename ImageT<T,C>::ColorAccess ImageT<T,C>::operator()(int i, int j)
+typename Image<T,C>::ColorAccess Image<T,C>::operator()(int i, int j)
 {
     return ColorAccess(at(i,j));
 }
 
 template<typename T, int C>
-typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::operator()(int i, int j) const
+typename Image<T,C>::ConstColorAccess Image<T,C>::operator()(int i, int j) const
 {
     return ConstColorAccess(at(i,j));
 }
 
 template<typename T, int C>
-typename ImageT<T,C>::ColorAccess ImageT<T,C>::operator()(int k)
+typename Image<T,C>::ColorAccess Image<T,C>::operator()(int k)
 {
     return ColorAccess(at(k));
 }
 
 template<typename T, int C>
-typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::operator()(int k) const
+typename Image<T,C>::ConstColorAccess Image<T,C>::operator()(int k) const
 {
     return ConstColorAccess(at(k));
 }
 
 template<typename T, int C>
-const std::vector<T>& ImageT<T,C>::data() const
+const std::vector<T>& Image<T,C>::data() const
 {
     return m_data;
 }
 
 template<typename T, int C>
-std::vector<T>& ImageT<T,C>::data()
+std::vector<T>& Image<T,C>::data()
 {
     return m_data;
 }
 
 template<typename T, int C>
-const T* ImageT<T,C>::raw() const
+const T* Image<T,C>::raw() const
 {
     return m_data.data();
 }
 
 template<typename T, int C>
-T* ImageT<T,C>::raw()
+T* Image<T,C>::raw()
 {
     return m_data.data();
 }
 
 template<typename T, int C>
-typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::eval(float u, float v) const
+typename Image<T,C>::ConstColorAccess Image<T,C>::eval(float u, float v) const
 {
     const int i = std::floor(u * (m_height-1));
     const int j = std::floor(v * (m_width-1));
@@ -723,7 +723,7 @@ typename ImageT<T,C>::ConstColorAccess ImageT<T,C>::eval(float u, float v) const
 }
 
 template<typename T, int C>
-typename ImageT<T,C>::ColorAccess ImageT<T,C>::eval(float u, float v)
+typename Image<T,C>::ColorAccess Image<T,C>::eval(float u, float v)
 {
     const int i = std::floor(u * (m_height-1));
     const int j = std::floor(v * (m_width-1));
@@ -731,17 +731,17 @@ typename ImageT<T,C>::ColorAccess ImageT<T,C>::eval(float u, float v)
 }
 
 template<typename T, int C>
-typename ImageT<T,C>::ConstMatrixMap ImageT<T,C>::as_matrix() const
+typename Image<T,C>::ConstMatrixMap Image<T,C>::as_matrix() const
 {
-    static_assert(C == 1, "ImageT<T,C>::as_matrix() is valid only for "
+    static_assert(C == 1, "Image<T,C>::as_matrix() is valid only for "
                           "single-channel image (C=1).");
     return ConstMatrixMap(m_data.data(), height(), width());
 }
 
 template<typename T, int C>
-typename ImageT<T,C>::MatrixMap ImageT<T,C>::as_matrix()
+typename Image<T,C>::MatrixMap Image<T,C>::as_matrix()
 {
-    static_assert(C == 1, "ImageT<T,C>::as_matrix() is valid only for "
+    static_assert(C == 1, "Image<T,C>::as_matrix() is valid only for "
                           "single-channel image (C=1).");
     return MatrixMap(m_data.data(), height(), width());
 }
@@ -749,7 +749,7 @@ typename ImageT<T,C>::MatrixMap ImageT<T,C>::as_matrix()
 // Modifiers -------------------------------------------------------------------
 
 template<typename T, int C>
-void ImageT<T,C>::clear()
+void Image<T,C>::clear()
 {
     m_height = 0;
     m_width  = 0;
@@ -757,7 +757,7 @@ void ImageT<T,C>::clear()
 }
 
 template<typename T, int C>
-void ImageT<T,C>::resize(int height, int width)
+void Image<T,C>::resize(int height, int width)
 {
     m_height = height;
     m_width  = width;
@@ -765,13 +765,13 @@ void ImageT<T,C>::resize(int height, int width)
 }
 
 template<typename T, int C>
-void ImageT<T,C>::fill(const T& value)
+void Image<T,C>::fill(const T& value)
 {
     std::fill(m_data.begin(), m_data.end(), value);
 }
 
 template<typename T, int C>
-void ImageT<T,C>::fill(const Color& color)
+void Image<T,C>::fill(const Color& color)
 {
     for(int i=0; i<m_height; ++i)
         for(int j=0; j<m_width; ++j)
@@ -781,35 +781,35 @@ void ImageT<T,C>::fill(const Color& color)
 // Internal --------------------------------------------------------------------
 
 template<typename T, int C>
-const T* ImageT<T,C>::at(int i, int j) const
+const T* Image<T,C>::at(int i, int j) const
 {
     assert(0 <= i && i < height() && 0 <= j && j <= width());
     return &m_data[index(i,j)];
 }
 
 template<typename T, int C>
-T* ImageT<T,C>::at(int i, int j)
+T* Image<T,C>::at(int i, int j)
 {
     assert(0 <= i && i < height() && 0 <= j && j <= width());
     return &m_data[index(i,j)];
 }
 
 template<typename T, int C>
-const T* ImageT<T,C>::at(int k) const
+const T* Image<T,C>::at(int k) const
 {
     assert(0 <= k && k < height() * width());
     return &m_data[C * k];
 }
 
 template<typename T, int C>
-T* ImageT<T,C>::at(int k)
+T* Image<T,C>::at(int k)
 {
     assert(0 <= k && k < height() * width());
     return &m_data[C * k];
 }
 
 template<typename T, int C>
-int ImageT<T,C>::index(int i, int j) const
+int Image<T,C>::index(int i, int j) const
 {
 //    return C * (i + j * height()); // column major
     return C * (i * width() + j); // row major
