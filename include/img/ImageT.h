@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef IMG_NO_EIGEN
 #include <Eigen/Core>
+#endif
 
 #include <vector>
 #include <string>
@@ -13,6 +15,7 @@
 #include <string.h>
 #include <limits.h>
 #include <assert.h>
+#include <cmath>
 
 namespace img {
 
@@ -52,6 +55,19 @@ inline bool save(const std::string& filename,
                  const ImageT<T,C>& image,
                  bool flip = false);
 
+// details ---------------------------------------------------------------------
+
+#ifdef IMG_NO_EIGEN
+namespace details {
+template<typename T, int C> class Color;
+template<typename T, int C> class ColorAccess;
+template<typename T, int C> class ConstColorAccess;
+template<typename T, int C> class Matrix;
+template<typename T, int C> class MatrixMap;
+template<typename T, int C> class ConstMatrixMap;
+} // namespace details
+#endif
+
 // -----------------------------------------------------------------------------
 
 template<typename T, int C>
@@ -60,12 +76,21 @@ class ImageT
     // Types -------------------------------------------------------------------
 public:
     using Type             = T;
+#ifndef IMG_NO_EIGEN
     using Color            = Eigen::Matrix<T, C, 1>;
     using ColorAccess      = Eigen::Map<Color>;
     using ConstColorAccess = Eigen::Map<const Color>;
     using Matrix           = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
     using MatrixMap        = Eigen::Map<Matrix>;
     using ConstMatrixMap   = Eigen::Map<const Matrix>;
+#else
+  using Color            = details::Color<T, C>;
+  using ColorAccess      = details::ColorAccess<T, C>;
+  using ConstColorAccess = details::ConstColorAccess<T, C>;
+  using Matrix           = details::Matrix<T, C>;
+  using MatrixMap        = details::MatrixMap<T, C>;
+  using ConstMatrixMap   = details::ConstMatrixMap<T, C>;
+#endif
 
     // Image -------------------------------------------------------------------
 public:
@@ -101,6 +126,9 @@ public:
     static constexpr int depth();
     inline int size() const;
     inline int capacity() const;
+
+    inline int rows() const;
+    inline int cols() const;
 
     // Accessors ---------------------------------------------------------------
 public:
@@ -535,6 +563,18 @@ template<typename T, int C>
 int ImageT<T,C>::capacity() const
 {
     return m_height * m_width * C;
+}
+
+template<typename T, int C>
+int ImageT<T,C>::rows() const
+{
+    return m_height;
+}
+
+template<typename T, int C>
+int ImageT<T,C>::cols() const
+{
+    return m_width;
 }
 
 // Accessors -------------------------------------------------------------------
