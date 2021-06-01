@@ -8,13 +8,12 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g3")
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB_RECURSE FILE_H   src/*.h  )
-file(GLOB_RECURSE FILE_CPP src/*.cpp)
-set(SOURCES ${FILE_H} ${FILE_CPP})
+#file(GLOB_RECURSE FILE_H   src/*.h  )
+#file(GLOB_RECURSE FILE_CPP src/*.cpp)
+#set(SOURCES ${FILE_H} ${FILE_CPP})
 
-include_directories(src external/Eigen/)
+include_directories(./include/ ./external/Eigen/)
 
-add_executable(example0_test examples/example0_test.cpp ${SOURCES})
-
-add_executable(example1_fractal examples/example1_fractal.cpp ${SOURCES})
-add_executable(example2_binary  examples/example2_binary.cpp  ${SOURCES})
+add_executable(example0_test    examples/example0_test.cpp   )
+add_executable(example1_fractal examples/example1_fractal.cpp)
+add_executable(example2_binary  examples/example2_binary.cpp )
