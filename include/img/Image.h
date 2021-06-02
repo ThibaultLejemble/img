@@ -79,9 +79,9 @@ class Image
 public:
     using Type             = T;
 #ifndef IMG_NO_EIGEN
-    using Color            = Eigen::Matrix<T, C, 1>;
-    using ColorAccess      = Eigen::Map<Color>;
-    using ConstColorAccess = Eigen::Map<const Color>;
+    using Color            = typename std::conditional<C==1, T,  Eigen::Matrix<T, C, 1>>::type;
+    using ColorAccess      = typename std::conditional<C==1, T&, Eigen::Map<Color>>::type;
+    using ConstColorAccess = typename std::conditional<C==1, T,  Eigen::Map<const Color>>::type;
     using Matrix           = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
     using MatrixMap        = Eigen::Map<Matrix>;
     using ConstMatrixMap   = Eigen::Map<const Matrix>;
@@ -158,7 +158,6 @@ public:
 public:
     inline void clear();
     inline void resize(int height, int width);
-    inline void fill(const T& value);
     inline void fill(const Color& color);
 
     // Internal ----------------------------------------------------------------
@@ -365,7 +364,7 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,2> {
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,2> {
     auto operator()(const typename Image<TFrom,1>::ConstColorAccess& c) {
         return typename Image<TTo,2>::Color(
-              cast_channel<TFrom,TTo>(c[0]), channel_one<TTo>());
+              cast_channel<TFrom,TTo>(c), channel_one<TTo>());
     }
 };
 
@@ -393,9 +392,9 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,3> {
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,3> {
     auto operator()(const typename Image<TFrom,1>::ConstColorAccess& c) {
       return typename Image<TTo,3>::Color(
-            cast_channel<TFrom,TTo>(c[0]),
-            cast_channel<TFrom,TTo>(c[0]),
-            cast_channel<TFrom,TTo>(c[0]));
+            cast_channel<TFrom,TTo>(c),
+            cast_channel<TFrom,TTo>(c),
+            cast_channel<TFrom,TTo>(c));
     }
 };
 
@@ -425,37 +424,37 @@ template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,4> {
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,4> {
     auto operator()(const typename Image<TFrom,1>::ConstColorAccess& c) {
         return typename Image<TTo,4>::Color(
-              cast_channel<TFrom,TTo>(c[0]),
-              cast_channel<TFrom,TTo>(c[0]),
-              cast_channel<TFrom,TTo>(c[0]),
+              cast_channel<TFrom,TTo>(c),
+              cast_channel<TFrom,TTo>(c),
+              cast_channel<TFrom,TTo>(c),
               channel_one<TTo>());
     }
 };
 
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,1,TTo,1> {
     auto operator()(const typename Image<TFrom,1>::ConstColorAccess& c) {
-        return typename Image<TTo,1>::Color(cast_channel<TFrom,TTo>(c[0]));
+        return typename Image<TTo,1>::Color(cast_channel<TFrom,TTo>(c));
     }
 };
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,2,TTo,2> {
     auto operator()(const typename Image<TFrom,2>::ConstColorAccess& c) {
         return typename Image<TTo,2>::Color(cast_channel<TFrom,TTo>(c[0]),
-                                             cast_channel<TFrom,TTo>(c[1]));
+                                            cast_channel<TFrom,TTo>(c[1]));
     }
 };
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,3,TTo,3> {
     auto operator()(const typename Image<TFrom,3>::ConstColorAccess& c) {
         return typename Image<TTo,3>::Color(cast_channel<TFrom,TTo>(c[0]),
-                                             cast_channel<TFrom,TTo>(c[1]),
-                                             cast_channel<TFrom,TTo>(c[2]));
+                                            cast_channel<TFrom,TTo>(c[1]),
+                                            cast_channel<TFrom,TTo>(c[2]));
     }
 };
 template<typename TFrom, typename TTo> struct DefaultCaster<TFrom,4,TTo,4> {
     auto operator()(const typename Image<TFrom,4>::ConstColorAccess& c) {
         return typename Image<TTo,4>::Color(cast_channel<TFrom,TTo>(c[0]),
-                                             cast_channel<TFrom,TTo>(c[1]),
-                                             cast_channel<TFrom,TTo>(c[2]),
-                                             cast_channel<TFrom,TTo>(c[3]));
+                                            cast_channel<TFrom,TTo>(c[1]),
+                                            cast_channel<TFrom,TTo>(c[2]),
+                                            cast_channel<TFrom,TTo>(c[3]));
     }
 };
 
@@ -669,25 +668,37 @@ int Image<T,C>::cols() const
 template<typename T, int C>
 typename Image<T,C>::ColorAccess Image<T,C>::operator()(int i, int j)
 {
-    return ColorAccess(at(i,j));
+    if constexpr(C == 1)
+        return *at(i,j);
+    else
+        return ColorAccess(at(i,j));
 }
 
 template<typename T, int C>
 typename Image<T,C>::ConstColorAccess Image<T,C>::operator()(int i, int j) const
 {
-    return ConstColorAccess(at(i,j));
+    if constexpr(C == 1)
+        return *at(i,j);
+    else
+        return ConstColorAccess(at(i,j));
 }
 
 template<typename T, int C>
 typename Image<T,C>::ColorAccess Image<T,C>::operator()(int k)
 {
-    return ColorAccess(at(k));
+    if constexpr(C == 1)
+        return *at(k);
+    else
+        return ColorAccess(at(k));
 }
 
 template<typename T, int C>
 typename Image<T,C>::ConstColorAccess Image<T,C>::operator()(int k) const
 {
-    return ConstColorAccess(at(k));
+    if constexpr(C == 1)
+        return *at(k);
+    else
+        return ConstColorAccess(at(k));
 }
 
 template<typename T, int C>
@@ -765,17 +776,10 @@ void Image<T,C>::resize(int height, int width)
 }
 
 template<typename T, int C>
-void Image<T,C>::fill(const T& value)
-{
-    std::fill(m_data.begin(), m_data.end(), value);
-}
-
-template<typename T, int C>
 void Image<T,C>::fill(const Color& color)
 {
-    for(int i=0; i<m_height; ++i)
-        for(int j=0; j<m_width; ++j)
-            this->operator()(i,j) = color;
+    for(int k = 0; k < size(); ++k)
+        this->operator()(k) = color;
 }
 
 // Internal --------------------------------------------------------------------

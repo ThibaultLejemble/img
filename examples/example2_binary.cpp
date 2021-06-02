@@ -21,7 +21,7 @@ int main()
     ImageGf binary;
     cast(gray, binary, [](auto c)
     {
-        return ImageGf::Color(c[0] > 0.5);
+        return ImageGf::Color(c > 0.5);
     });
 
     save("example2_gray.png",   gray);

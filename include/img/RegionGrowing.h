@@ -31,12 +31,12 @@ auto region_growing(const ImageT& img, LabelImage& labels, CompFuncT&& f)
     {
         for(auto j=0; j<w; ++j)
         {
-            if(labels(i,j)[0] == INVALID)
+            if(labels(i,j) == INVALID)
             {
                 const auto label_current = label_count;
                 ++label_count;
 
-                labels(i,j)[0] = label_current;
+                labels(i,j) = label_current;
 
                 std::stack<LabelPair> stack;
                 stack.push(std::make_pair(i,j));
@@ -56,10 +56,10 @@ auto region_growing(const ImageT& img, LabelImage& labels, CompFuncT&& f)
 
                             if(0 <= i3 && i3 < h &&
                                0 <= j3 && j3 < w &&
-                               labels(i3, j3)[0] == INVALID &&
+                               labels(i3, j3) == INVALID &&
                                f(i2,j2, i3,j3))
                             {
-                                labels(i3, j3)[0] = label_current;
+                                labels(i3, j3) = label_current;
                                 stack.push(std::make_pair(i3,j3));
                             }
                         }

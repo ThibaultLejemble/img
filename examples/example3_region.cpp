@@ -18,15 +18,14 @@ int main()
     ImageGi labels;
     auto n = region_growing(gray, labels, [&gray](int i,int j, int k,int l) -> bool
     {
-        const auto diff = std::abs(gray(i,j)[0] - gray(k,l)[0]);
+        const auto diff = std::abs(gray(i,j) - gray(k,l));
         return diff < 0.01;
     });
 
     std::cout << n << " regions created" << std::endl;
 
-    cast(labels, gray, [](auto c)
+    cast(labels, gray, [](auto label)
     {
-         const auto label = c[0];
          return ImageGf::Color(label % 2);
     });
 
