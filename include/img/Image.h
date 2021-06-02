@@ -86,9 +86,9 @@ public:
     using MatrixMap        = Eigen::Map<Matrix>;
     using ConstMatrixMap   = Eigen::Map<const Matrix>;
 #else
-  using Color            = details::Color<T, C>;
-  using ColorAccess      = details::ColorAccess<T, C>;
-  using ConstColorAccess = details::ConstColorAccess<T, C>;
+  using Color            = typename std::conditional<C==1, T,  details::Color<T, C>>::type;
+  using ColorAccess      = typename std::conditional<C==1, T&, details::ColorAccess<T, C>>::type;
+  using ConstColorAccess = typename std::conditional<C==1, T,  details::ConstColorAccess<T, C>>::type;
   using Matrix           = details::Matrix<T, C>;
   using MatrixMap        = details::MatrixMap<T, C>;
   using ConstMatrixMap   = details::ConstMatrixMap<T, C>;
